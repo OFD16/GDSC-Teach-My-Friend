@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "706862147475",
+    "project_id": "sharey-1a01f",
+    "storage_bucket": "sharey-1a01f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706862147475:android:f39eaedf9064de473f2a66",
+        "android_client_info": {
+          "package_name": "com.sharey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRPuYbwnIEGRaVEyAICeIFoEjmL16HWus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
