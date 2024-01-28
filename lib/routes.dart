@@ -1,5 +1,5 @@
+import 'package:Sharey/screens/products/products_screen.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shop_app/screens/products/products_screen.dart';
 
 import 'screens/cart/cart_screen.dart';
 import 'screens/complete_profile/complete_profile_screen.dart';

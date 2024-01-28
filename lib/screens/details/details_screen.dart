@@ -1,6 +1,6 @@
+import 'package:Sharey/screens/cart/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop_app/screens/cart/cart_screen.dart';
 
 import '../../models/Product.dart';
 import 'components/color_dots.dart';
