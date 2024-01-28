@@ -1,4 +1,4 @@
-package com.example.demo_app
+package com.sharey
 
 import io.flutter.embedding.android.FlutterActivity
 
