@@ -1,4 +1,8 @@
+import 'package:Sharey/providers/auth_user_provider.dart';
+import 'package:Sharey/screens/sign_in/sign_in_screen.dart';
+import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
@@ -9,6 +13,8 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    AuthUserProvider authUserProvider =
+        Provider.of<AuthUserProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
@@ -42,7 +48,16 @@ class ProfileScreen extends StatelessWidget {
             ProfileMenu(
               text: "Log Out",
               icon: "assets/icons/Log out.svg",
-              press: () {},
+              press: () {
+                AuthService authService = AuthService();
+                authService.signOut();
+                authUserProvider.clearAuthUser();
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  SignInScreen.routeName,
+                  (route) => false, // This predicate will remove all routes
+                );
+              },
             ),
           ],
         ),
