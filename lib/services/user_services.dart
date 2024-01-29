@@ -7,10 +7,7 @@ class UserService {
 
   Future<void> addUser(User user) async {
     try {
-      await _usersCollection.doc(user.id).set(
-            user.toJson(),
-            // Add other user-related data as needed
-          );
+      await _usersCollection.doc(user.id).set(user.toJson());
       print('User added successfully');
     } catch (e) {
       print('Error adding user i n addUser: $e');

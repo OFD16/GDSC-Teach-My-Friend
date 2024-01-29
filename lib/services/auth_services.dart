@@ -17,7 +17,7 @@ class AuthService {
 
       Fluttertoast.showToast(
         msg: 'User logged in successfully',
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.TOP,
         backgroundColor: Colors.greenAccent,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -44,7 +44,7 @@ class AuthService {
       }
       Fluttertoast.showToast(
         msg: errorMessage,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.TOP,
         backgroundColor: Colors.redAccent,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -75,7 +75,7 @@ class AuthService {
       await userService.addUser(tempUser);
       Fluttertoast.showToast(
         msg: 'User registered successfully',
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.TOP,
         backgroundColor: Colors.greenAccent,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -84,7 +84,7 @@ class AuthService {
     } on firebase_auth.FirebaseException catch (e) {
       Fluttertoast.showToast(
         msg: e.message!,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.TOP,
         backgroundColor: Colors.redAccent,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -99,7 +99,7 @@ class AuthService {
       await _auth.signOut();
       Fluttertoast.showToast(
         msg: 'User logged out successfully',
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.TOP,
         backgroundColor: Colors.greenAccent,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -109,7 +109,7 @@ class AuthService {
       print(e);
       Fluttertoast.showToast(
         msg: e.message!,
-        gravity: ToastGravity.CENTER,
+        gravity: ToastGravity.TOP,
         backgroundColor: Colors.redAccent,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -130,7 +130,7 @@ class AuthService {
   //     });
   //     Fluttertoast.showToast(
   //       msg: 'User data updated successfully',
-  //       gravity: ToastGravity.CENTER,
+  //       gravity: ToastGravity.TOP,
   //       backgroundColor: Colors.greenAccent,
   //       textColor: Colors.white,
   //       fontSize: 16.0,
@@ -138,7 +138,7 @@ class AuthService {
   //   } on FirebaseException catch (e) {
   //     Fluttertoast.showToast(
   //       msg: e.message!,
-  //       gravity: ToastGravity.CENTER,
+  //       gravity: ToastGravity.TOP,
   //       backgroundColor: Colors.redAccent,
   //       textColor: Colors.white,
   //       fontSize: 16.0,
@@ -157,7 +157,7 @@ class AuthService {
   //     // User with the same email already exists
   //     Fluttertoast.showToast(
   //       msg: "User with this email already exists",
-  //       gravity: ToastGravity.CENTER,
+  //       gravity: ToastGravity.TOP,
   //       backgroundColor: Colors.redAccent,
   //       textColor: Colors.white,
   //       fontSize: 16.0,
@@ -174,7 +174,7 @@ class AuthService {
 
   //     Fluttertoast.showToast(
   //       msg: "User Added",
-  //       gravity: ToastGravity.CENTER,
+  //       gravity: ToastGravity.TOP,
   //       backgroundColor: Colors.greenAccent,
   //       textColor: Colors.white,
   //       fontSize: 16.0,
@@ -185,7 +185,7 @@ class AuthService {
   //     print("Failed to add user: $error");
   //     Fluttertoast.showToast(
   //       msg: "Failed to add user: $error",
-  //       gravity: ToastGravity.CENTER,
+  //       gravity: ToastGravity.TOP,
   //       backgroundColor: Colors.redAccent,
   //       textColor: Colors.white,
   //       fontSize: 16.0,

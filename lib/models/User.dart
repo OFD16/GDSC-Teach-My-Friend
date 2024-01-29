@@ -1,6 +1,7 @@
 class User {
   User({
     this.isEmailVerified,
+    this.userRate,
     this.userName,
     this.phoneNumber,
     this.address,
@@ -16,13 +17,14 @@ class User {
   });
 
   late bool? isEmailVerified;
-  late String? firstName;
-  late String? lastName;
-  late String? userName;
-  late String? phoneNumber;
-  late String? address;
-  late String? email;
-  late String? password;
+  late int? userRate;
+  late String? firstName,
+      lastName,
+      userName,
+      phoneNumber,
+      address,
+      email,
+      password;
   late DateTime? createdAt;
   late DateTime? updatedAt;
   late DateTime? lastSignInTime;
@@ -32,6 +34,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       isEmailVerified: json["isEmailVerified"],
+      userRate: json["userRate"],
       firstName: json["firstName"],
       lastName: json["lastName"],
       userName: json["userName"],
@@ -49,6 +52,7 @@ class User {
 
   Map<String, dynamic> toJson() => {
         "isEmailVerified": isEmailVerified,
+        "userRate": userRate,
         "firstName": firstName,
         "lastName": lastName,
         "userName": userName,
