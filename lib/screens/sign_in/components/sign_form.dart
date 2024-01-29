@@ -1,3 +1,4 @@
+import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/models/User.dart';
 import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
@@ -148,6 +149,7 @@ class _SignFormState extends State<SignForm> {
                 if (authUserData != null) {
                   //context.watch<AuthUserProvider>().authUser.toString() example of using context.watch
                   authUserProvider.setAuthUser(authUserData);
+                  AuthStorage().setAuthUser(authUserData);
                   KeyboardUtil.hideKeyboard(context);
                   Navigator.pushNamedAndRemoveUntil(
                     context,

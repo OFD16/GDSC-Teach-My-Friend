@@ -1,3 +1,4 @@
+import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/sign_in/sign_in_screen.dart';
 import 'package:Sharey/services/auth_services.dart';
@@ -52,6 +53,7 @@ class ProfileScreen extends StatelessWidget {
                 AuthService authService = AuthService();
                 authService.signOut();
                 authUserProvider.clearAuthUser();
+                AuthStorage().clearAuthUser();
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   SignInScreen.routeName,

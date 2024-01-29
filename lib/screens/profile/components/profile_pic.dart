@@ -1,5 +1,8 @@
+import 'package:Sharey/models/User.dart';
+import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({
@@ -8,6 +11,10 @@ class ProfilePic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthUserProvider authUserProvider =
+        Provider.of<AuthUserProvider>(context, listen: false);
+    User authUser = authUserProvider.authUser!;
+
     return SizedBox(
       height: 115,
       width: 115,
@@ -15,8 +22,11 @@ class ProfilePic extends StatelessWidget {
         fit: StackFit.expand,
         clipBehavior: Clip.none,
         children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage("assets/images/Profile Image.png"),
+          CircleAvatar(
+            backgroundImage:
+                authUser.photoUrl != null && authUser.photoUrl != ""
+                    ? NetworkImage(authUser.photoUrl!) as ImageProvider
+                    : const AssetImage("assets/images/profile_image.jpg"),
           ),
           Positioned(
             right: -16,
@@ -26,7 +36,8 @@ class ProfilePic extends StatelessWidget {
               width: 46,
               child: TextButton(
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.white, shape: RoundedRectangleBorder(
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                     side: const BorderSide(color: Colors.white),
                   ),

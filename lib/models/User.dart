@@ -28,7 +28,7 @@ class User {
   late DateTime? createdAt;
   late DateTime? updatedAt;
   late DateTime? lastSignInTime;
-  late dynamic photoUrl;
+  late String? photoUrl;
   final String? id;
 
   factory User.fromJson(Map<String, dynamic> json) {

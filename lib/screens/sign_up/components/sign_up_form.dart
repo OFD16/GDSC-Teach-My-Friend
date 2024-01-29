@@ -1,4 +1,5 @@
 import 'package:Sharey/helper/keyboard.dart';
+import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/models/User.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/services/auth_services.dart';
@@ -151,10 +152,10 @@ class _SignUpFormState extends State<SignUpForm> {
                 // if all are valid then go to success screen
                 User? authUserData = await AuthService()
                     .registerWithEmailAndPassword(email!, password!);
-                print('signuP : $authUserData' + authUserData.toString());
                 if (authUserData != null) {
                   //context.watch<AuthUserProvider>().authUser.toString() example of using context.watch
                   authUserProvider.setAuthUser(authUserData);
+                  AuthStorage().setAuthUser(authUserData);
                   KeyboardUtil.hideKeyboard(context);
                   Navigator.pushNamed(context, CompleteProfileScreen.routeName);
                 }
