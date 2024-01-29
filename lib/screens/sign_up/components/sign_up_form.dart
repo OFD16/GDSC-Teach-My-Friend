@@ -1,4 +1,8 @@
+import 'package:Sharey/helper/keyboard.dart';
+import 'package:Sharey/providers/auth_user_provider.dart';
+import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
@@ -38,6 +42,9 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    AuthUserProvider authUserProvider =
+        Provider.of<AuthUserProvider>(context, listen: false);
+
     return Form(
       key: _formKey,
       child: Column(
@@ -137,11 +144,19 @@ class _SignUpFormState extends State<SignUpForm> {
           FormError(errors: errors),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                var authUserData = await AuthService()
+                    .registerWithEmailAndPassword(email!, password!);
+
+                if (authUserData != null) {
+                  //context.watch<AuthUserProvider>().authUser.toString() example of using context.watch
+                  authUserProvider.setAuthUser(authUserData);
+                  KeyboardUtil.hideKeyboard(context);
+                  Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                }
               }
             },
             child: const Text("Continue"),
