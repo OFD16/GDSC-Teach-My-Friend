@@ -1,3 +1,4 @@
+import 'package:Sharey/models/User.dart';
 import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -141,14 +142,19 @@ class _SignFormState extends State<SignForm> {
                 _formKey.currentState!.save();
 
                 // if all are valid then go to success screen
-                var authUserData = await AuthService()
+                User? authUserData = await AuthService()
                     .signInWithEmailAndPassword(email!, password!);
 
                 if (authUserData != null) {
                   //context.watch<AuthUserProvider>().authUser.toString() example of using context.watch
                   authUserProvider.setAuthUser(authUserData);
                   KeyboardUtil.hideKeyboard(context);
-                  Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    LoginSuccessScreen.routeName,
+                    // This makes sure to remove all previous routes
+                    (route) => false,
+                  );
                 }
               }
             },

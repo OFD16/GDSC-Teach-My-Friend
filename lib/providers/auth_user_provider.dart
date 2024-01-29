@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Sharey/models/User.dart';
 import 'package:flutter/material.dart';
 
 class AuthUserProvider with ChangeNotifier {

@@ -1,17 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Sharey/services/user_services.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../models/User.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
+  UserService userService = UserService();
 
-  // Sign in with email and password
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      firebase_auth.UserCredential result = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
+
       Fluttertoast.showToast(
         msg: 'User logged in successfully',
         gravity: ToastGravity.CENTER,
@@ -19,8 +22,19 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      return result.user!;
-    } on FirebaseException catch (e) {
+      User tempUser = User(
+        id: result.user!.uid,
+        email: email,
+        password: password,
+        createdAt: result.user?.metadata.creationTime,
+        lastSignInTime: result.user?.metadata.lastSignInTime,
+        phoneNumber: result.user?.phoneNumber,
+        isEmailVerified: result.user?.emailVerified,
+        photoUrl: result.user?.photoURL,
+        firstName: result.user?.displayName,
+      );
+      return tempUser;
+    } on firebase_auth.FirebaseException catch (e) {
       String errorMessage = '';
       if (e.message ==
           'The supplied auth credential is incorrect, malformed or has expired.') {
@@ -43,8 +57,22 @@ class AuthService {
   Future<User?> registerWithEmailAndPassword(
       String email, String password) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      firebase_auth.UserCredential result = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      User tempUser = User(
+        id: result.user!.uid,
+        email: email,
+        password: password,
+        createdAt: result.user?.metadata.creationTime,
+        lastSignInTime: result.user?.metadata.lastSignInTime,
+        phoneNumber: result.user?.phoneNumber,
+        isEmailVerified: result.user?.emailVerified,
+        photoUrl: result.user?.photoURL,
+        firstName: result.user?.displayName,
+      );
+      // Create a new user in firestore
+
+      await userService.addUser(tempUser);
       Fluttertoast.showToast(
         msg: 'User registered successfully',
         gravity: ToastGravity.CENTER,
@@ -52,8 +80,8 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      return result.user;
-    } on FirebaseException catch (e) {
+      return tempUser;
+    } on firebase_auth.FirebaseException catch (e) {
       Fluttertoast.showToast(
         msg: e.message!,
         gravity: ToastGravity.CENTER,
@@ -76,7 +104,7 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-    } on FirebaseException catch (e) {
+    } on firebase_auth.FirebaseException catch (e) {
       print('-----------------------error-------------------------');
       print(e);
       Fluttertoast.showToast(
@@ -88,6 +116,35 @@ class AuthService {
       );
     }
   }
+
+  // Update user data , firstName + lastName = displayName, phoneNumber, address
+// Update user data
+  // Future<void> updateUserData(String userId, String firstName, String lastName,
+  //     String phoneNumber, String address) async {
+  //   try {
+  //     await FirebaseFirestore.instance.collection('users').doc(userId).update({
+  //       'firstName': firstName,
+  //       'lastName': lastName,
+  //       'phoneNumber': phoneNumber,
+  //       'address': address,
+  //     });
+  //     Fluttertoast.showToast(
+  //       msg: 'User data updated successfully',
+  //       gravity: ToastGravity.CENTER,
+  //       backgroundColor: Colors.greenAccent,
+  //       textColor: Colors.white,
+  //       fontSize: 16.0,
+  //     );
+  //   } on FirebaseException catch (e) {
+  //     Fluttertoast.showToast(
+  //       msg: e.message!,
+  //       gravity: ToastGravity.CENTER,
+  //       backgroundColor: Colors.redAccent,
+  //       textColor: Colors.white,
+  //       fontSize: 16.0,
+  //     );
+  //   }
+  // }
 
   // final userCollection = FirebaseFirestore.instance.collection('users');
 

@@ -1,4 +1,5 @@
 import 'package:Sharey/helper/keyboard.dart';
+import 'package:Sharey/models/User.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
@@ -148,9 +149,9 @@ class _SignUpFormState extends State<SignUpForm> {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
-                var authUserData = await AuthService()
+                User? authUserData = await AuthService()
                     .registerWithEmailAndPassword(email!, password!);
-
+                print('signuP : $authUserData' + authUserData.toString());
                 if (authUserData != null) {
                   //context.watch<AuthUserProvider>().authUser.toString() example of using context.watch
                   authUserProvider.setAuthUser(authUserData);
