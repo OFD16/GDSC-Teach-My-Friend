@@ -34,7 +34,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       isEmailVerified: json["isEmailVerified"],
-      userRate: json["userRate"],
+      userRate: (json['userRate'] as num?)?.toInt(),
       firstName: json["firstName"],
       lastName: json["lastName"],
       userName: json["userName"],

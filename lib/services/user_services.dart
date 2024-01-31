@@ -5,6 +5,22 @@ class UserService {
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
 
+  Future<User?> getUser(String userId) async {
+    try {
+      DocumentSnapshot snapshot = await _usersCollection.doc(userId).get();
+      if (snapshot.exists) {
+        User? user = User.fromJson(snapshot.data() as Map<String, dynamic>);
+        return user;
+      } else {
+        print('User not found');
+        return null;
+      }
+    } catch (e) {
+      print('Error getting user: $e');
+      return null;
+    }
+  }
+
   Future<void> addUser(User user) async {
     try {
       await _usersCollection.doc(user.id).set(user.toJson());

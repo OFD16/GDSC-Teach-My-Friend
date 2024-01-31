@@ -150,7 +150,9 @@ class _SignFormState extends State<SignForm> {
                   //context.watch<AuthUserProvider>().authUser.toString() example of using context.watch
                   authUserProvider.setAuthUser(authUserData);
                   AuthStorage().setAuthUser(authUserData);
+                  // ignore: use_build_context_synchronously
                   KeyboardUtil.hideKeyboard(context);
+                  // ignore: use_build_context_synchronously
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     LoginSuccessScreen.routeName,

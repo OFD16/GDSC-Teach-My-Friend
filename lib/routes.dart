@@ -1,5 +1,7 @@
+import 'package:Sharey/screens/create_content/create_content.dart';
 import 'package:Sharey/screens/products/products_screen.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/cart/cart_screen.dart';
 import 'screens/complete_profile/complete_profile_screen.dart';
@@ -30,4 +32,5 @@ final Map<String, WidgetBuilder> routes = {
   DetailsScreen.routeName: (context) => const DetailsScreen(),
   CartScreen.routeName: (context) => const CartScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
+  CreateContentScreen.routeName: (context) => const CreateContentScreen(),
 };

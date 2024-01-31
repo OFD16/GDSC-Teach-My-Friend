@@ -22,6 +22,7 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+
       User tempUser = User(
         id: result.user!.uid,
         email: email,
@@ -33,6 +34,13 @@ class AuthService {
         photoUrl: result.user?.photoURL,
         firstName: result.user?.displayName,
       );
+
+      // print(" temp user vcalue : value of user: ${tempUser.toJson()}");
+
+      User? cloudUser = await userService.getUser(result.user!.uid);
+
+      // print("cloud user value : value of user: ${cloudUser?.toJson()}");
+      tempUser = cloudUser ?? tempUser;
       return tempUser;
     } on firebase_auth.FirebaseException catch (e) {
       String errorMessage = '';

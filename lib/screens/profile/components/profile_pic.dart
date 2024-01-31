@@ -13,8 +13,8 @@ class ProfilePic extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthUserProvider authUserProvider =
         Provider.of<AuthUserProvider>(context, listen: false);
-    User authUser = authUserProvider.authUser!;
-
+    User? authUser = authUserProvider.authUser;
+    print("authUser: $authUser");
     return SizedBox(
       height: 115,
       width: 115,
@@ -23,10 +23,11 @@ class ProfilePic extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           CircleAvatar(
-            backgroundImage:
-                authUser.photoUrl != null && authUser.photoUrl != ""
-                    ? NetworkImage(authUser.photoUrl!) as ImageProvider
-                    : const AssetImage("assets/images/profile_image.jpg"),
+            backgroundImage: authUser != null &&
+                    authUser.photoUrl != null &&
+                    authUser.photoUrl != ""
+                ? NetworkImage(authUser.photoUrl!) as ImageProvider
+                : const AssetImage("assets/images/profile_image.jpg"),
           ),
           Positioned(
             right: -16,

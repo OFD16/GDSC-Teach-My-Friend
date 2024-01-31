@@ -29,7 +29,9 @@ class ProfileScreen extends StatelessWidget {
             ProfileMenu(
               text: "My Account",
               icon: "assets/icons/User Icon.svg",
-              press: () => {},
+              press: () => {
+                print("authUser: ${authUserProvider.authUser!.toJson()}"),
+              },
             ),
             ProfileMenu(
               text: "Notifications",
@@ -53,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
                 AuthService authService = AuthService();
                 authService.signOut();
                 authUserProvider.clearAuthUser();
-                AuthStorage().clearAuthUser();
+                AuthStorage().removeAuthUser();
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   SignInScreen.routeName,

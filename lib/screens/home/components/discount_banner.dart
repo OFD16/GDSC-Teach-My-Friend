@@ -28,7 +28,7 @@ class _DiscountBannerState extends State<DiscountBanner> {
   Future<void> _fetchCoupon() async {
     Coupon? initCoupon = await couponService.getCoupon(widget.couponID);
     setState(() {
-      if (initCoupon != null) {
+      if (initCoupon != null && mounted) {
         coupon = initCoupon;
       }
     });
@@ -54,12 +54,12 @@ class _DiscountBannerState extends State<DiscountBanner> {
       ),
       child: Text.rich(
         TextSpan(
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
           children: [
             TextSpan(text: "${coupon.description}\n"),
             TextSpan(
               text: coupon.title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
