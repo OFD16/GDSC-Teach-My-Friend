@@ -17,7 +17,7 @@ class User {
   });
 
   late bool? isEmailVerified;
-  late int? userRate;
+  late double? userRate;
   late String? firstName,
       lastName,
       userName,
@@ -34,7 +34,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       isEmailVerified: json["isEmailVerified"],
-      userRate: (json['userRate'] as num?)?.toInt(),
+      userRate: (json['userRate'] as double?)?.toDouble(),
       firstName: json["firstName"],
       lastName: json["lastName"],
       userName: json["userName"],
