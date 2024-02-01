@@ -37,6 +37,7 @@ class _InitScreenState extends State<InitScreen> {
 
     await AuthStorage().getAuthUser().then((User? user) {
       if (user != null) {
+        print("authUser is $user");
         authUserProvider.setAuthUser(user);
       }
     });

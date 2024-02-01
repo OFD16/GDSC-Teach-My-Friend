@@ -5,8 +5,13 @@ import '../../../constants.dart';
 
 class Categories extends StatefulWidget {
   int selected;
-  void Function()? press;
-  Categories({super.key, this.selected = 0, this.press});
+  final ValueChanged<int>? onTabChanged;
+
+  Categories({
+    Key? key,
+    required this.selected,
+    this.onTabChanged,
+  }) : super(key: key);
 
   @override
   State<Categories> createState() => _CategoriesState();
@@ -16,14 +21,14 @@ class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> categories = [
-      {"icon": "assets/icons/Flash Icon.svg", "text": "Sports", "tab": 0},
+      {"icon": "assets/icons/sports.svg", "text": "Sports", "tab": 0},
       {
-        "icon": "assets/icons/Bill Icon.svg",
+        "icon": "assets/icons/education.svg",
         "text": "School \n Lessons",
         "tab": 1
       },
-      {"icon": "assets/icons/Game Icon.svg", "text": "Game", "tab": 2},
-      {"icon": "assets/icons/Gift Icon.svg", "text": "Music", "tab": 3},
+      {"icon": "assets/icons/art.svg", "text": "Art", "tab": 2},
+      {"icon": "assets/icons/instrument.svg", "text": "Music", "tab": 3},
       {"icon": "assets/icons/Discover.svg", "text": "More", "tab": 4},
     ];
     return Padding(
@@ -38,7 +43,14 @@ class _CategoriesState extends State<Categories> {
             icon: categories[index]["icon"],
             text: categories[index]["text"],
             selected: widget.selected,
-            press: widget.press,
+            press: () {
+              setState(() {
+                widget.selected = categories[index]["tab"];
+                if (widget.onTabChanged != null) {
+                  widget.onTabChanged!(categories[index]["tab"]);
+                }
+              });
+            },
           ),
         ),
       ),
@@ -58,7 +70,7 @@ class CategoryCard extends StatelessWidget {
 
   final String icon, text;
   final int selected, tab;
-  final GestureTapCallback? press;
+  final GestureTapCallback press;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +86,12 @@ class CategoryCard extends StatelessWidget {
               color: selected == tab ? kPurpleColor : kPrimaryLightColor,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: SvgPicture.asset(icon),
+            child: SvgPicture.asset(
+              icon,
+              color: kPrimaryColor,
+              width: 48,
+              height: 48,
+            ),
           ),
           const SizedBox(height: 4),
           Text(text, textAlign: TextAlign.center)

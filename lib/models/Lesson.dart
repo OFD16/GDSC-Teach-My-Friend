@@ -1,32 +1,33 @@
-class Coupon {
-  Coupon({
+class Lesson {
+  Lesson({
+    this.id,
     required this.ownerId,
-    required this.level,
+    this.level,
     this.userLimit,
     this.students,
     this.description,
-    required this.id,
     this.images,
-    required this.pricePoint,
+    this.pricePoint,
     this.createdAt,
     this.updatedAt,
-    required this.title,
+    this.title,
+    this.type,
   });
 
-  final String? ownerId;
-  final String? level;
-  final int? userLimit;
-  final List<String>? students;
-  final String? description;
-  final String? id;
-  final List<String>? images;
-  final int? pricePoint;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final String? title;
+  String? ownerId;
+  String? level;
+  String? userLimit;
+  List<String>? students;
+  String? description;
+  String? id;
+  List<String>? images;
+  int? pricePoint;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? title, type;
 
-  factory Coupon.fromJson(Map<String, dynamic> json) {
-    return Coupon(
+  factory Lesson.fromJson(Map<String, dynamic> json) {
+    return Lesson(
       ownerId: json["ownerId"],
       level: json["level"],
       userLimit: json["userLimit"],
@@ -42,6 +43,7 @@ class Coupon {
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
       title: json["title"],
+      type: json["type"],
     );
   }
 
@@ -57,5 +59,6 @@ class Coupon {
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "title": title,
+        "type": type,
       };
 }

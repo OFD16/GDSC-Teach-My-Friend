@@ -1,5 +1,15 @@
 import 'package:Sharey/constants.dart';
+import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/create_content/components/education_card.dart';
+import 'package:Sharey/screens/create_content/text_input.dart';
+import 'package:Sharey/screens/home/home_screen.dart';
+import 'package:Sharey/screens/init_screen.dart';
+import 'package:Sharey/services/lesson_services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import '../../models/Lesson.dart';
+
+import '../../models/User.dart';
 import '../home/components/categories.dart';
 
 import "./data.dart";
@@ -19,44 +29,150 @@ class CreateContentScreen extends StatefulWidget {
 }
 
 class _CreateContentScreenState extends State<CreateContentScreen> {
-  FeedService couponService = FeedService();
-  late List<String> initCouponIDs = []; //"8BwXMNVrrYCI5gZY4let"
-  bool isLoading = true;
+  LessonService lessonService = LessonService();
 
-  List<int> tabs = [0, 1, 2, 3, 4];
-  int selectedCategory = 1;
-  Future<void> _fetchFeed() async {
-    setState(() {
-      isLoading = true;
-    });
-    List<String> ids = await couponService.getCouponList();
-    setState(() {
-      initCouponIDs = ids;
-      isLoading = false;
-    });
+  List<List<Map<String, dynamic>>> categoriesList = [
+    sportList,
+    lessonList,
+    artList,
+    musicList,
+    sportList
+  ];
+
+  int selectedCategory = 0;
+  List<String> images = [];
+  String levelText = "", studentText = "", typeText = "";
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  Future<void> createTeachingContent(User authUser) async {
+    Lesson lesson = Lesson(
+      ownerId: authUser.id,
+      level: levelText,
+      title: titleController.text,
+      description: descriptionController.text,
+      images: images,
+      type: typeText,
+      userLimit: studentText,
+      pricePoint: calculatePoints(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    if (lesson.title != "" && lesson.description != "" && lesson.type != "") {
+      await lessonService.createLesson(lesson).then((value) => {
+            // print("value is ${value}"),
+            setState(() {
+              clearSelectedCategory();
+            }),
+            Navigator.pushNamed(context, InitScreen.routeName),
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                backgroundColor: Colors.green,
+                content: Text("Your teaching content has been created"),
+              ),
+            ),
+          });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill in the title, description and category"),
+        ),
+      );
+    }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // _fetchFeed();
+  void clearSelectedCategory() {
+    for (List<Map<String, dynamic>> categoryList in categoriesList) {
+      // Iterate through each item in the category list
+      for (Map<String, dynamic> item in categoryList) {
+        // Set "isSelect" to false for each item
+        item["isSelect"] = false;
+      }
+    }
   }
 
   void onPressOnCategories(int tab) {
     setState(() {
-      isLoading = true;
+      selectedCategory = tab;
     });
+  }
 
+  void onPressOnEducation(Map<String, dynamic> cat) {
     setState(() {
-      selectedCategory = tabs[tab];
+      if (cat["isSelect"] == false) {
+        clearSelectedCategory();
+        cat["isSelect"] = true;
+        typeText = cat["title"];
+        images.add(cat["image"]!);
+      } else {
+        cat["isSelect"] = false;
+        typeText = "";
+        images = [];
+      }
     });
+  }
+
+  int calculatePoints() {
+    // Total point will be calculated based on the level and student count
+    int points = 0;
+
+    // Assign points based on the level
+    switch (levelText) {
+      case "Beginner":
+        points += 25;
+        break;
+      case "Intermediate":
+        points += 35;
+        break;
+      case "Advanced":
+        points += 55;
+        break;
+      default:
+        points += 0;
+    }
+
+    // Assign additional points based on the student count
+    switch (studentText) {
+      case "1":
+        points += 5;
+        break;
+      case "1-4":
+        points += 15;
+        break;
+      case "4-8":
+        points += 25;
+        break;
+      case "8-12":
+        points += 45;
+        break;
+      default:
+        points += 0;
+    }
+
+    // Assign additional points based on the selected education category
+    for (final category in categoriesList) {
+      for (final education in category) {
+        if (education["isSelect"] == true) {
+          points += education["point"] as int;
+        }
+      }
+    }
+
+    return points * 2;
   }
 
   @override
   Widget build(BuildContext context) {
+    AuthUserProvider authUserProvider =
+        Provider.of<AuthUserProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create Content"),
+        title: const Text(
+          "Create Teaching Content",
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryColor),
+        ),
         centerTitle: true,
         backgroundColor: kPrimaryLightColor,
       ),
@@ -68,28 +184,36 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
             children: [
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text("Select a category:"),
+                child: Text(
+                    "Select a category: "), // context.watch<AuthUserProvider>().authUser!.toJson()
               ),
               Categories(
-                  selected: selectedCategory,
-                  press: () => onPressOnCategories(4)),
+                selected: selectedCategory,
+                onTabChanged: (tab) {
+                  onPressOnCategories(tab);
+                },
+              ),
               CarouselSlider(
-                items: artList.map((sport) {
+                items: categoriesList[selectedCategory].map<Widget>((cat) {
                   return Builder(
                     builder: (BuildContext context) {
-                      return EducationCard(education: sport);
+                      return EducationCard(
+                        education: cat,
+                        onTap: () => onPressOnEducation(cat),
+                        isSelected: cat["isSelect"],
+                      );
                     },
                   );
                 }).toList(),
                 options: CarouselOptions(
-                  height: 200,
+                  height: 150,
                   aspectRatio: 16 / 9,
                   viewportFraction: 0.8,
                   initialPage: 0,
                   enableInfiniteScroll: true,
                   reverse: false,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 3),
+                  autoPlay: false,
+                  autoPlayInterval: const Duration(milliseconds: 800),
                   autoPlayAnimationDuration: const Duration(milliseconds: 800),
                   autoPlayCurve: Curves.fastOutSlowIn,
                   enlargeCenterPage: true,
@@ -98,33 +222,142 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-              // CarouselSlider.builder(
-              //   itemCount: 15,
-              //   itemBuilder:
-              //       (BuildContext context, int itemIndex, int pageViewIndex) =>
-              //           Container(
-              //     child: Text(itemIndex.toString()),
-              //     decoration: BoxDecoration(
-              //       color: Colors.amber,
-              //     ),
-              //   ),
-              //   options: CarouselOptions(
-              //     height: 400,
-              //     aspectRatio: 16 / 9,
-              //     viewportFraction: 0.8,
-              //     initialPage: 0,
-              //     enableInfiniteScroll: true,
-              //     reverse: false,
-              //     autoPlay: true,
-              //     autoPlayInterval: Duration(seconds: 3),
-              //     autoPlayAnimationDuration: Duration(milliseconds: 800),
-              //     autoPlayCurve: Curves.fastOutSlowIn,
-              //     enlargeCenterPage: true,
-              //     enlargeFactor: 0.3,
-              //     //onPageChanged: callbackFunction,
-              //     scrollDirection: Axis.horizontal,
-              //   ),
-              // )
+              const SizedBox(height: 20),
+              TextInput(
+                title: "Title",
+                hintText: "Title of your content",
+                controller: titleController,
+              ),
+              TextInput(
+                title: "Description",
+                hintText: "Description of your content",
+                controller: descriptionController,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    child: Text("Select a level:",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ...levels
+                              .map((level) => Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: ChoiceChip(
+                                      label: Text(level["text"]!),
+                                      selected: levelText == level["text"],
+                                      onSelected: (bool selected) {
+                                        setState(() {
+                                          levelText = level["text"]!;
+                                        });
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    child: Text("Select a max student:",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ...studentCount
+                              .map((studentLimit) => Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: ChoiceChip(
+                                      label: Text(
+                                          studentLimit["text"]! + " person"),
+                                      selected:
+                                          studentText == studentLimit["text"],
+                                      onSelected: (bool selected) {
+                                        setState(() {
+                                          studentText = studentLimit["text"]!;
+                                        });
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              levelText != "" && studentText != ""
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text.rich(
+                              TextSpan(
+                                text: "Total:\n",
+                                children: [
+                                  WidgetSpan(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 4.0, left: 4.0),
+                                      child: Row(children: [
+                                        Text(
+                                          calculatePoints().toString(),
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        SvgPicture.asset(
+                                          "assets/icons/point.svg",
+                                          height: 16,
+                                          width: 16,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        const Text(
+                                          "Points",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black),
+                                        )
+                                      ]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => createTeachingContent(
+                                  authUserProvider.authUser!),
+                              child: const Text("Submit"),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),
