@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Categories extends StatelessWidget {
-  const Categories({super.key});
+import '../../../constants.dart';
 
+class Categories extends StatefulWidget {
+  int selected;
+  void Function()? press;
+  Categories({super.key, this.selected = 0, this.press});
+
+  @override
+  State<Categories> createState() => _CategoriesState();
+}
+
+class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> categories = [
-      {"icon": "assets/icons/Flash Icon.svg", "text": "Sports"},
-      {"icon": "assets/icons/Bill Icon.svg", "text": "School \n Lessons"},
-      {"icon": "assets/icons/Game Icon.svg", "text": "Game"},
-      {"icon": "assets/icons/Gift Icon.svg", "text": "Music"},
-      {"icon": "assets/icons/Discover.svg", "text": "More"},
+      {"icon": "assets/icons/Flash Icon.svg", "text": "Sports", "tab": 0},
+      {
+        "icon": "assets/icons/Bill Icon.svg",
+        "text": "School \n Lessons",
+        "tab": 1
+      },
+      {"icon": "assets/icons/Game Icon.svg", "text": "Game", "tab": 2},
+      {"icon": "assets/icons/Gift Icon.svg", "text": "Music", "tab": 3},
+      {"icon": "assets/icons/Discover.svg", "text": "More", "tab": 4},
     ];
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -21,9 +34,11 @@ class Categories extends StatelessWidget {
         children: List.generate(
           categories.length,
           (index) => CategoryCard(
+            tab: categories[index]["tab"],
             icon: categories[index]["icon"],
             text: categories[index]["text"],
-            press: () {},
+            selected: widget.selected,
+            press: widget.press,
           ),
         ),
       ),
@@ -36,11 +51,14 @@ class CategoryCard extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.text,
+    required this.selected,
+    required this.tab,
     required this.press,
   }) : super(key: key);
 
   final String icon, text;
-  final GestureTapCallback press;
+  final int selected, tab;
+  final GestureTapCallback? press;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +71,7 @@ class CategoryCard extends StatelessWidget {
             height: 56,
             width: 56,
             decoration: BoxDecoration(
-              color: const Color(0xFFFFECDF),
+              color: selected == tab ? kPurpleColor : kPrimaryLightColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: SvgPicture.asset(icon),

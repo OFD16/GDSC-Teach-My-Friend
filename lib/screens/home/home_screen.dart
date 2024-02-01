@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : DiscountBanner(
                       couponID: initCouponIDs[0],
                     ),
-              const Categories(),
+              Categories(selected: 0),
               const SpecialOffers(),
               const SizedBox(height: 20),
               const PopularProducts(),
