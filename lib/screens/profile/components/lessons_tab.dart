@@ -33,7 +33,7 @@ class _LessonTabState extends State<LessonTab> {
   Future<List<Lesson>> getLessons(String id) async {
     lessonService.getUserLessons(id).then((value) {
       setState(() {
-        lessons = value ?? [];
+        lessons = value;
       });
     });
     return lessons;

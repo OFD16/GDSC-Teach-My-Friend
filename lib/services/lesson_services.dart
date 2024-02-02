@@ -103,7 +103,7 @@ class LessonService {
     }
   }
 
-  Future<List<Lesson>?> getUserLessons(String userId) async {
+  Future<List<Lesson>> getUserLessons(String userId) async {
     try {
       final doc =
           await _lessonsCollection.where('ownerId', isEqualTo: userId).get();
@@ -119,7 +119,7 @@ class LessonService {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        return null;
+        return [];
       }
     } catch (e) {
       print('Error getting coupon: $e');
@@ -130,7 +130,7 @@ class LessonService {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      return null;
+      return [];
     }
   }
 }

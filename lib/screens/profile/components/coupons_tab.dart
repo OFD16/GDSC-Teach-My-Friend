@@ -33,7 +33,7 @@ class _CouponsTabState extends State<CouponsTab> {
   Future<List<Coupon>> getCoupons(String id) async {
     couponService.getUserCoupons(id).then((value) {
       setState(() {
-        coupons = value ?? [];
+        coupons = value;
       });
     });
     return coupons;
