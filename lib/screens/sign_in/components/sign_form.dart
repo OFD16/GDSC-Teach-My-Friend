@@ -22,10 +22,55 @@ class SignForm extends StatefulWidget {
 
 class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
-  String? email;
-  String? password;
-  bool? remember = false;
+  final TextEditingController emailController = TextEditingController(text: "");
+  final TextEditingController passwordController =
+      TextEditingController(text: "");
+  String email = "";
+  String password = "";
+  bool remember = false;
   final List<String?> errors = [];
+
+  AuthStorage authStorage = AuthStorage();
+  @override
+  void initState() {
+    super.initState();
+    getLocalData();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void getLocalData() async {
+    await authStorage.getRememberMe().then((value) {
+      setState(() {
+        remember = value;
+      });
+      print("remember: $remember");
+    });
+    authStorage.getRememberMeEmail().then((value) {
+      if (value != null) {
+        setState(() {
+          email = value;
+          emailController.text = value;
+        });
+      }
+      print("email: $email");
+    });
+    authStorage.getRememberMePassword().then((value) {
+      if (value != null) {
+        setState(() {
+          password = value;
+          passwordController.text = value;
+        });
+        print("password: $password");
+      }
+    });
+    setState(() {});
+  }
 
   void addError({String? error}) {
     if (!errors.contains(error)) {
@@ -47,13 +92,15 @@ class _SignFormState extends State<SignForm> {
   Widget build(BuildContext context) {
     AuthUserProvider authUserProvider =
         Provider.of<AuthUserProvider>(context, listen: false);
+
     return Form(
       key: _formKey,
       child: Column(
         children: [
           TextFormField(
+            controller: emailController,
             keyboardType: TextInputType.emailAddress,
-            onSaved: (newValue) => email = newValue,
+            onSaved: (newValue) => email = newValue!,
             onChanged: (value) {
               if (value.isNotEmpty) {
                 removeError(error: kEmailNullError);
@@ -83,8 +130,9 @@ class _SignFormState extends State<SignForm> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            controller: passwordController,
             obscureText: true,
-            onSaved: (newValue) => password = newValue,
+            onSaved: (newValue) => password = newValue!,
             onChanged: (value) {
               if (value.isNotEmpty) {
                 removeError(error: kPassNullError);
@@ -120,7 +168,9 @@ class _SignFormState extends State<SignForm> {
                 activeColor: kPrimaryColor,
                 onChanged: (value) {
                   setState(() {
-                    remember = value;
+                    if (value != null) {
+                      remember = value;
+                    }
                   });
                 },
               ),
@@ -150,7 +200,18 @@ class _SignFormState extends State<SignForm> {
                 if (authUserData != null) {
                   //context.watch<AuthUserProvider>().authUser.toString() example of using context.watch
                   authUserProvider.setAuthUser(authUserData);
-                  AuthStorage().setAuthUser(authUserData);
+                  authStorage.setAuthUser(authUserData);
+
+                  if (remember) {
+                    authStorage.setRememberMe(remember);
+                    authStorage.setRememberMeEmail(email!);
+                    authStorage.setRememberMePassword(password!);
+                  } else {
+                    authStorage.setRememberMe(remember);
+                    authStorage.setRememberMeEmail("");
+                    authStorage.setRememberMePassword("");
+                  }
+
                   // ignore: use_build_context_synchronously
                   KeyboardUtil.hideKeyboard(context);
                   // ignore: use_build_context_synchronously

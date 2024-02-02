@@ -28,4 +28,34 @@ class AuthStorage {
     }
     return null;
   }
+
+  setRememberMe(bool rememberMe) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("rememberMe", rememberMe);
+  }
+
+  Future<bool> getRememberMe() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("rememberMe") ?? false;
+  }
+
+  setRememberMeEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("rememberMeEmail", email);
+  }
+
+  Future<String?> getRememberMeEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("rememberMeEmail");
+  }
+
+  setRememberMePassword(String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("rememberMePassword", password);
+  }
+
+  Future<String?> getRememberMePassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("rememberMePassword");
+  }
 }
