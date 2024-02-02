@@ -15,7 +15,7 @@ class RateCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: const EdgeInsets.all(20),
+          margin: const EdgeInsets.all(8),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
             color: Colors.grey.shade300,

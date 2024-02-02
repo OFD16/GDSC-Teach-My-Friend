@@ -40,4 +40,18 @@ class CouponService {
   Future<void> deleteCoupon(String couponId) async {
     await _couponsCollection.doc(couponId).delete();
   }
+
+  Future<List<Coupon>> getUserCoupons(String userId) async {
+    try {
+      final querySnapshot = await _couponsCollection
+          .where('couponOwners', arrayContains: userId)
+          .get();
+      return querySnapshot.docs
+          .map((doc) => Coupon.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error getting user coupons: $e');
+      return [];
+    }
+  }
 }

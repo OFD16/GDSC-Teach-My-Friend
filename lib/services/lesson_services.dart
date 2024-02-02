@@ -103,7 +103,7 @@ class LessonService {
     }
   }
 
-  Future<List<Lesson>?> getuserlessons(String userId) async {
+  Future<List<Lesson>?> getUserLessons(String userId) async {
     try {
       final doc =
           await _lessonsCollection.where('ownerId', isEqualTo: userId).get();

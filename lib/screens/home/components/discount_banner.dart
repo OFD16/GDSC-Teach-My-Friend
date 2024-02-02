@@ -6,24 +6,37 @@ class DiscountBanner extends StatefulWidget {
   const DiscountBanner({
     required this.couponID,
     Key? key,
+    this.couponData,
   }) : super(key: key);
 
   final String couponID;
+  final Coupon? couponData;
   @override
   State<DiscountBanner> createState() => _DiscountBannerState();
 }
 
 class _DiscountBannerState extends State<DiscountBanner> {
   CouponService couponService = CouponService();
-  Coupon coupon = Coupon(
-      id: '1',
-      title: 'test',
-      description: 'test',
-      count: 4,
-      pricePoint: 20,
-      images: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now());
+  late Coupon coupon;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.couponData != null) {
+      coupon = widget.couponData!;
+    } else {
+      coupon = Coupon(
+          id: '1',
+          title: 'test',
+          description: 'test',
+          count: 4,
+          pricePoint: 20,
+          images: [],
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now());
+      _fetchCoupon();
+    }
+  }
 
   Future<void> _fetchCoupon() async {
     Coupon? initCoupon = await couponService.getCoupon(widget.couponID);
@@ -32,11 +45,6 @@ class _DiscountBannerState extends State<DiscountBanner> {
         coupon = initCoupon;
       }
     });
-  }
-
-  void initState() {
-    super.initState();
-    _fetchCoupon();
   }
 
   @override
