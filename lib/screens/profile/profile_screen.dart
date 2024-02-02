@@ -1,10 +1,8 @@
 import 'package:Sharey/constants.dart';
-import 'package:Sharey/models/Lesson.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/profile/components/coupons_tab.dart';
 import 'package:Sharey/screens/profile/components/lessons_tab.dart';
 import 'package:Sharey/screens/profile/components/rate_card.dart';
-import 'package:Sharey/screens/profile/components/update_lesson_bottomsheet.dart';
 import 'package:Sharey/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,9 +1,7 @@
-import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/services/lesson_services.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import '../../../models/Lesson.dart';
 import '../../create_content/components/education_card.dart';
 import "../../create_content/data.dart";

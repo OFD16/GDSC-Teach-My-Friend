@@ -3,7 +3,6 @@ import 'package:Sharey/screens/home/components/discount_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constants.dart';
 import '../../../providers/auth_user_provider.dart';
 import '../../../services/coupon_services.dart';
 
@@ -49,6 +48,5 @@ class _CouponsTabState extends State<CouponsTab> {
         return DiscountBanner(couponID: coupon.id!, couponData: coupon);
       },
     );
-    ;
   }
 }
