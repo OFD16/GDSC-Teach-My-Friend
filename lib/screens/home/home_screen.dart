@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   FeedService couponService = FeedService();
-  late List<String> initCouponIDs = []; //"8BwXMNVrrYCI5gZY4let"
+  late List<String> initCouponIDs = [];
   bool isLoading = true;
 
   Future<void> _fetchFeed() async {
@@ -53,8 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text("Loading..."),
                       ],
                     )
-                  : DiscountBanner(
-                      couponID: initCouponIDs[0],
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: initCouponIDs.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return DiscountBanner(
+                          couponID: initCouponIDs[index],
+                        );
+                      },
                     ),
               Categories(selected: 0),
               const SpecialOffers(),

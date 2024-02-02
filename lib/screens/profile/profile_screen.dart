@@ -32,13 +32,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () =>
-                Navigator.pushNamed(context, SettingsScreen.routeName),
-          ),
-        ],
+        actions: authUserProvider.authUser != null
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, SettingsScreen.routeName),
+                )
+              ]
+            : [],
       ),
       body: Center(
         child: Padding(

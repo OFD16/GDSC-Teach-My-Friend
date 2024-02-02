@@ -13,10 +13,11 @@ class User {
     this.updatedAt,
     this.email,
     this.password,
+    this.isAdmin,
     required this.id,
   });
 
-  late bool? isEmailVerified;
+  late bool? isEmailVerified, isAdmin;
   late double? userRate;
   late String? firstName,
       lastName,
@@ -34,6 +35,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       isEmailVerified: json["isEmailVerified"],
+      isAdmin: json["isAdmin"],
       userRate: (json['userRate'] as double?)?.toDouble(),
       firstName: json["firstName"],
       lastName: json["lastName"],
@@ -52,6 +54,7 @@ class User {
 
   Map<String, dynamic> toJson() => {
         "isEmailVerified": isEmailVerified,
+        "isAdmin": isAdmin,
         "userRate": userRate,
         "firstName": firstName,
         "lastName": lastName,

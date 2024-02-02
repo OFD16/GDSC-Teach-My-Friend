@@ -1,5 +1,6 @@
 import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/models/User.dart';
+import 'package:Sharey/screens/init_screen.dart';
 import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -155,7 +156,7 @@ class _SignFormState extends State<SignForm> {
                   // ignore: use_build_context_synchronously
                   Navigator.pushNamedAndRemoveUntil(
                     context,
-                    LoginSuccessScreen.routeName,
+                    InitScreen.routeName,
                     // This makes sure to remove all previous routes
                     (route) => false,
                   );
