@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
 
-              currentTab == "Lessons" ? LessonTab() : CouponsTab(),
+              currentTab == "Lessons" ? const LessonTab() : const CouponsTab(),
             ],
           ),
         ),

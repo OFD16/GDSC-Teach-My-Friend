@@ -1,22 +1,20 @@
-import 'package:Sharey/constants.dart';
+import 'package:Sharey/screens/init_screen.dart';
+
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/create_content/components/education_card.dart';
 import 'package:Sharey/screens/create_content/text_input.dart';
-import 'package:Sharey/screens/home/home_screen.dart';
-import 'package:Sharey/screens/init_screen.dart';
-import 'package:Sharey/services/lesson_services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
-import '../../models/Lesson.dart';
-
-import '../../models/User.dart';
 import '../home/components/categories.dart';
 
+import 'package:Sharey/services/lesson_services.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/Lesson.dart';
+import '../../models/User.dart';
+import 'package:Sharey/constants.dart';
 import "./data.dart";
 
-import 'package:Sharey/services/feed_services.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class CreateContentScreen extends StatefulWidget {
@@ -44,6 +42,11 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
   String levelText = "", studentText = "", typeText = "";
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    clearSelectedCategory();
+  }
 
   Future<void> createTeachingContent(User authUser) async {
     Lesson lesson = Lesson(

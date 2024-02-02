@@ -1,4 +1,5 @@
 import 'package:Sharey/providers/auth_user_provider.dart';
+import 'package:Sharey/screens/profile/components/empty_status.dart';
 import 'package:Sharey/screens/profile/components/update_lesson_bottomsheet.dart';
 import 'package:Sharey/services/lesson_services.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _LessonTabState extends State<LessonTab> {
   LessonService lessonService = LessonService();
   late AuthUserProvider authUserProvider;
   List<Lesson> lessons = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -31,9 +33,13 @@ class _LessonTabState extends State<LessonTab> {
   }
 
   Future<List<Lesson>> getLessons(String id) async {
+    setState(() {
+      isLoading = true;
+    });
     lessonService.getUserLessons(id).then((value) {
       setState(() {
         lessons = value;
+        isLoading = false;
       });
     });
     return lessons;
@@ -43,6 +49,18 @@ class _LessonTabState extends State<LessonTab> {
   Widget build(BuildContext context) {
     AuthUserProvider authUserProvider =
         Provider.of<AuthUserProvider>(context, listen: false);
+
+    if (isLoading) {
+      return const Center(
+          child: Padding(
+        padding: EdgeInsets.all(30),
+        child: CircularProgressIndicator(color: kPrimaryColor),
+      ));
+    }
+
+    if (lessons.isEmpty) {
+      return const EmptyStatus();
+    }
 
     return ListView.builder(
       shrinkWrap: true,

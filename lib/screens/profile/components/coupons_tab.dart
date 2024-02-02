@@ -1,5 +1,8 @@
 import 'package:Sharey/models/Coupon.dart';
+import '../../../constants.dart';
+
 import 'package:Sharey/screens/home/components/discount_banner.dart';
+import 'package:Sharey/screens/profile/components/empty_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +20,7 @@ class _CouponsTabState extends State<CouponsTab> {
   CouponService couponService = CouponService();
   late AuthUserProvider authUserProvider;
   List<Coupon> coupons = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -30,9 +34,13 @@ class _CouponsTabState extends State<CouponsTab> {
   }
 
   Future<List<Coupon>> getCoupons(String id) async {
+    setState(() {
+      isLoading = true;
+    });
     couponService.getUserCoupons(id).then((value) {
       setState(() {
         coupons = value;
+        isLoading = false;
       });
     });
     return coupons;
@@ -40,6 +48,17 @@ class _CouponsTabState extends State<CouponsTab> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(
+          child: Padding(
+        padding: EdgeInsets.all(30),
+        child: CircularProgressIndicator(color: kPrimaryColor),
+      ));
+    }
+
+    if (coupons.isEmpty) {
+      return const EmptyStatus();
+    }
     return ListView.builder(
       shrinkWrap: true,
       itemCount: coupons.length,
