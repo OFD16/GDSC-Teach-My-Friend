@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RateCard extends StatelessWidget {
-  final double rate;
+  final double? rate;
 
-  RateCard({required this.rate});
+  RateCard({this.rate});
 
   @override
   Widget build(BuildContext context) {
+    if (rate == null) {
+      return const SizedBox();
+    }
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: const EdgeInsets.only(right: 20),
+          margin: const EdgeInsets.all(20),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.grey.shade300,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(

@@ -61,9 +61,16 @@ class LessonService {
     }
   }
 
-  Future<void> updateLesson(String lessonId, Lesson updatedLesson) async {
+  Future<void> updateLesson(String? lessonId, Lesson updatedLesson) async {
     try {
       await _lessonsCollection.doc(lessonId).update(updatedLesson.toJson());
+      Fluttertoast.showToast(
+        msg: 'Lesson updated successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Error updating lesson',
@@ -78,6 +85,13 @@ class LessonService {
   Future<void> deleteLesson(String lessonId) async {
     try {
       await _lessonsCollection.doc(lessonId).delete();
+      Fluttertoast.showToast(
+        msg: 'Lesson deleted successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Error deleting lesson',
@@ -89,15 +103,15 @@ class LessonService {
     }
   }
 
-  Future<List<Lesson>?> getuserlessons(String uid) async {
+  Future<List<Lesson>?> getuserlessons(String userId) async {
     try {
-      final doc = await _lessonsCollection.where('uid', isEqualTo: uid).get();
+      final doc =
+          await _lessonsCollection.where('ownerId', isEqualTo: userId).get();
       if (doc.docs.isNotEmpty) {
         return doc.docs
             .map((doc) => Lesson.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
       } else {
-        print('Lesson not found');
         Fluttertoast.showToast(
           msg: 'Lesson not found',
           gravity: ToastGravity.TOP,
@@ -109,6 +123,13 @@ class LessonService {
       }
     } catch (e) {
       print('Error getting coupon: $e');
+      Fluttertoast.showToast(
+        msg: 'Error occured when trying to get lessons: $e',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       return null;
     }
   }
