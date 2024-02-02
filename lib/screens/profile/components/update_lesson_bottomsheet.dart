@@ -34,6 +34,32 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
     musicList,
     sportList
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    titleController.text = widget.lesson.title!;
+    descriptionController.text = widget.lesson.description!;
+    levelText = widget.lesson.level!;
+    studentText = widget.lesson.userLimit!;
+    typeText = widget.lesson.type!;
+    images = widget.lesson.images!;
+
+    for (int i = 0; i < categoriesList.length; i++) {
+      for (int j = 0; j < categoriesList[i].length; j++) {
+        final item = categoriesList[i][j];
+        if (item["title"] == widget.lesson.type) {
+          setState(() {
+            selectedCategory = i;
+            initialPage = j;
+            item["isSelect"] = true;
+          });
+          return;
+        }
+      }
+    }
+  }
+
   void clearSelectedCategory() {
     for (List<Map<String, dynamic>> categoryList in categoriesList) {
       // Iterate through each item in the category list
@@ -71,7 +97,6 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
     // Total point will be calculated based on the level and student count
     int points = 0;
 
-    // Assign points based on the level
     switch (levelText) {
       case "Beginner":
         points += 25;
@@ -86,7 +111,6 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
         points += 0;
     }
 
-    // Assign additional points based on the student count
     switch (studentText) {
       case "1":
         points += 5;
@@ -104,7 +128,6 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
         points += 0;
     }
 
-    // Assign additional points based on the selected education category
     for (final category in categoriesList) {
       for (final education in category) {
         if (education["isSelect"] == true) {
@@ -117,9 +140,7 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
   }
 
   void updateLesson() {
-    print("widget.lesson : ${widget.lesson.toJson()}");
     Lesson updatedLesson = widget.lesson;
-    print("UpdatedLesson 1: ${updatedLesson.toJson()}");
     updatedLesson.title = titleController.text;
     updatedLesson.description = descriptionController.text;
     updatedLesson.level = levelText;
@@ -130,39 +151,10 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
 
     LessonService().updateLesson(updatedLesson.id, updatedLesson);
     Navigator.pop(context);
-    // Create teaching content
   }
 
   @override
-  void initState() {
-    super.initState();
-    titleController.text = widget.lesson.title!;
-    descriptionController.text = widget.lesson.description!;
-    levelText = widget.lesson.level!;
-    studentText = widget.lesson.userLimit!;
-    typeText = widget.lesson.type!;
-    images = widget.lesson.images!;
-
-    for (int i = 0; i < categoriesList.length; i++) {
-      for (int j = 0; j < categoriesList[i].length; j++) {
-        final item = categoriesList[i][j];
-        if (item["title"] == widget.lesson.type) {
-          // Store the indices or take any other action
-          setState(() {
-            selectedCategory = i;
-            initialPage = j;
-            item["isSelect"] = true;
-          });
-          return; // Optional: If you want to stop searching after finding the item
-        }
-      }
-    }
-  }
-
   Widget build(BuildContext context) {
-    AuthUserProvider authUserProvider =
-        Provider.of<AuthUserProvider>(context, listen: false);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

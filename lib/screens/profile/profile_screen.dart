@@ -1,19 +1,13 @@
 import 'package:Sharey/constants.dart';
-import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/models/Lesson.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/profile/components/rate_card.dart';
 import 'package:Sharey/screens/profile/components/update_lesson_bottomsheet.dart';
 import 'package:Sharey/screens/settings/settings_screen.dart';
-import 'package:Sharey/screens/sign_in/sign_in_screen.dart';
-import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/User.dart';
 import '../../services/lesson_services.dart';
-import '../create_content/data.dart';
-import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -32,15 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late AuthUserProvider authUserProvider;
   List<Lesson> lessons = [];
 
-  Future<List<Lesson>> getLessons(String id) async {
-    lessonService.getuserlessons(id).then((value) {
-      setState(() {
-        lessons = value ?? [];
-      });
-    });
-    return lessons;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -50,6 +35,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (userId != null) {
       getLessons(userId);
     }
+  }
+
+  Future<List<Lesson>> getLessons(String id) async {
+    lessonService.getuserlessons(id).then((value) {
+      setState(() {
+        lessons = value ?? [];
+      });
+    });
+    return lessons;
   }
 
   @override
@@ -213,61 +207,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       ),
                                                     ),
                                                   );
-
-                                                  // Scaffold.of(context)
-                                                  //     .showBottomSheet<
-                                                  //         void>(
-                                                  //   (BuildContext context) {
-                                                  //     return Container(
-                                                  //       height: 700,
-                                                  //       decoration:
-                                                  //           const BoxDecoration(
-                                                  //         color:
-                                                  //             kPrimaryLightColor,
-                                                  //         borderRadius:
-                                                  //             BorderRadius
-                                                  //                 .only(
-                                                  //           topLeft: Radius
-                                                  //               .circular(
-                                                  //                   20),
-                                                  //           topRight: Radius
-                                                  //               .circular(
-                                                  //                   20),
-                                                  //         ),
-                                                  //         border: Border(
-                                                  //           top: BorderSide(
-                                                  //               color:
-                                                  //                   kPrimaryColor,
-                                                  //               width: 1),
-                                                  //         ),
-                                                  //       ),
-                                                  //       child: Center(
-                                                  //         child: Column(
-                                                  //           mainAxisAlignment:
-                                                  //               MainAxisAlignment
-                                                  //                   .center,
-                                                  //           mainAxisSize:
-                                                  //               MainAxisSize
-                                                  //                   .min,
-                                                  //           children: <Widget>[
-                                                  //             UpdateLessonBottomSheet(
-                                                  //                 lesson:
-                                                  //                     lesson),
-                                                  //             ElevatedButton(
-                                                  //               child: const Text(
-                                                  //                   'Close BottomSheet'),
-                                                  //               onPressed:
-                                                  //                   () {
-                                                  //                 Navigator.pop(
-                                                  //                     context);
-                                                  //               },
-                                                  //             ),
-                                                  //           ],
-                                                  //         ),
-                                                  //       ),
-                                                  //     );
-                                                  //   },
-                                                  // );
                                                 },
                                                 icon: const Icon(Icons.edit),
                                               ),
