@@ -17,6 +17,7 @@ class ProductImages extends StatefulWidget {
 
 class _ProductImagesState extends State<ProductImages> {
   int selectedImage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,12 +26,26 @@ class _ProductImagesState extends State<ProductImages> {
           width: 238,
           child: AspectRatio(
             aspectRatio: 1,
-            child: isLink(widget.images[0])
-                ? Image(image: NetworkImage(widget.images[0]))
-                : Image(image: AssetImage(widget.images[0])),
+            child: Container(
+                decoration: BoxDecoration(
+                  color: kSecondaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: isLink(widget.images[0])
+                      ? Image.network(
+                          widget.images[0],
+                          fit: BoxFit.cover,
+                        )
+                      : Image(
+                          image: AssetImage(widget.images[0]),
+                          fit: BoxFit.cover,
+                        ),
+                )),
           ),
         ),
-        // SizedBox(height: 20),
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -85,7 +100,9 @@ class _SmallProductImageState extends State<SmallProductImage> {
           border: Border.all(
               color: kPrimaryColor.withOpacity(widget.isSelected ? 1 : 0)),
         ),
-        child: Image.asset(widget.image),
+        child: isLink(widget.image)
+            ? Image.network(widget.image)
+            : Image(image: AssetImage(widget.image)),
       ),
     );
   }

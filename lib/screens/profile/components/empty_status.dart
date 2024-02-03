@@ -3,10 +3,13 @@ import 'package:Sharey/screens/create_content/create_content.dart';
 import 'package:flutter/material.dart';
 
 class EmptyStatus extends StatelessWidget {
-  const EmptyStatus({super.key});
-
+  const EmptyStatus(
+      {super.key, required this.isAuthUser, required this.tabName});
+  final String tabName;
+  final bool isAuthUser;
   @override
   Widget build(BuildContext context) {
+    print("isAuthUser : $isAuthUser");
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -14,10 +17,12 @@ class EmptyStatus extends StatelessWidget {
           const SizedBox(height: 20),
           Image.asset("assets/images/lets_teach_something.png",
               height: 200, width: 200),
-          const Text(
-            "You don't have any lessons yet \n Start teaching  \n and earn coupons!",
+          Text(
+            isAuthUser
+                ? "You don't have any ${tabName == "Lessons" ? "lessons" : "coupons"} yet \n Start teaching  \n and earn coupons!"
+                : "This user doesn't have\n any ${tabName == "Lessons" ? "lessons" : "coupons"}  yet",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: kPrimaryColor,
               fontSize: 20,
             ),
@@ -27,12 +32,15 @@ class EmptyStatus extends StatelessWidget {
             constraints: const BoxConstraints(
               maxWidth: 150, // Set your maximum width
             ),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, CreateContentScreen.routeName);
-              },
-              child: const Text("Start Teaching"),
-            ),
+            child: isAuthUser
+                ? ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, CreateContentScreen.routeName);
+                    },
+                    child: const Text("Start Teaching"),
+                  )
+                : const SizedBox(),
           )
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:Sharey/models/Coupon.dart';
+import 'package:Sharey/models/User.dart';
 import '../../../constants.dart';
 
 import 'package:Sharey/screens/home/components/discount_banner.dart';
@@ -10,7 +11,8 @@ import '../../../providers/auth_user_provider.dart';
 import '../../../services/coupon_services.dart';
 
 class CouponsTab extends StatefulWidget {
-  const CouponsTab({super.key});
+  const CouponsTab({super.key, this.user});
+  final User? user;
 
   @override
   State<CouponsTab> createState() => _CouponsTabState();
@@ -48,6 +50,9 @@ class _CouponsTabState extends State<CouponsTab> {
 
   @override
   Widget build(BuildContext context) {
+    AuthUserProvider authUserProvider =
+        Provider.of<AuthUserProvider>(context, listen: false);
+
     if (isLoading) {
       return const Center(
           child: Padding(
@@ -57,7 +62,10 @@ class _CouponsTabState extends State<CouponsTab> {
     }
 
     if (coupons.isEmpty) {
-      return const EmptyStatus();
+      return EmptyStatus(
+        tabName: "Coupons",
+        isAuthUser: widget.user!.id == authUserProvider.authUser!.id,
+      );
     }
     return ListView.builder(
       shrinkWrap: true,

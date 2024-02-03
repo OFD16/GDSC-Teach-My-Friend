@@ -4,17 +4,19 @@ import 'package:Sharey/screens/profile/components/coupons_tab.dart';
 import 'package:Sharey/screens/profile/components/lessons_tab.dart';
 import 'package:Sharey/screens/profile/components/rate_card.dart';
 import 'package:Sharey/screens/settings/settings_screen.dart';
+import 'package:Sharey/services/user_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/User.dart';
 import '../../services/lesson_services.dart';
 import 'components/profile_pic.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String routeName = "/profile";
 
-  ProfileScreen({super.key});
-
+  ProfileScreen({super.key, this.user});
+  User? user;
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -24,6 +26,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String currentTab = "Lessons";
 
+  UserService userService = UserService();
+
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    // Get the arguments
+    ProfilesArguments? args =
+        ModalRoute.of(context)?.settings.arguments as ProfilesArguments?;
+
+    // Check if the arguments are not null
+    if (args != null) {
+      // Update the user in the widget
+      setState(() {
+        widget.user = args.user;
+      });
+
+      // Trigger a rebuild after user data is fetched
+      print("user in profile screen: ${widget.user!.toJson()}");
+    } else {
+      // If the arguments are null, get the user from the provider
+      AuthUserProvider authUserProvider =
+          Provider.of<AuthUserProvider>(context, listen: false);
+      if (authUserProvider.authUser != null) {
+        setState(() {
+          widget.user = authUserProvider.authUser;
+        });
+
+        print("user in profile screen: ${widget.user!.toJson()}");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthUserProvider authUserProvider =
@@ -32,7 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
-        actions: authUserProvider.authUser != null
+        actions: widget.user != null &&
+                widget.user!.id == authUserProvider.authUser!.id
             ? [
                 IconButton(
                   icon: const Icon(Icons.settings),
@@ -50,8 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               const ProfilePic(),
               const SizedBox(height: 20),
-              const Text("asigklaslşkagsşigas"),
-              RateCard(rate: authUserProvider.authUser!.userRate),
+              Text("${widget.user?.firstName} ${widget.user?.lastName}"),
+              RateCard(rate: widget.user?.userRate),
 
               // Tab buttons
               Padding(
@@ -110,11 +145,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
 
-              currentTab == "Lessons" ? const LessonTab() : const CouponsTab(),
+              currentTab == "Lessons"
+                  ? LessonTab(user: widget.user)
+                  : CouponsTab(user: widget.user),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+class ProfilesArguments {
+  User? user;
+
+  ProfilesArguments({required this.user});
 }

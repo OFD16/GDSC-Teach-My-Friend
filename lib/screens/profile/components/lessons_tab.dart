@@ -1,5 +1,7 @@
 import 'package:Sharey/helpers/is_link.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
+
+import 'package:Sharey/screens/details/details_screen.dart';
 import 'package:Sharey/screens/profile/components/empty_status.dart';
 import 'package:Sharey/screens/profile/components/update_lesson_bottomsheet.dart';
 import 'package:Sharey/services/lesson_services.dart';
@@ -8,25 +10,26 @@ import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 import '../../../models/Lesson.dart';
+import '../../../models/User.dart';
 
 class LessonTab extends StatefulWidget {
-  const LessonTab({super.key});
-
+  const LessonTab({super.key, this.user});
+  final User? user;
   @override
   State<LessonTab> createState() => _LessonTabState();
 }
 
 class _LessonTabState extends State<LessonTab> {
   LessonService lessonService = LessonService();
-  late AuthUserProvider authUserProvider;
+
   List<Lesson> lessons = [];
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    authUserProvider = Provider.of<AuthUserProvider>(context, listen: false);
-    String? userId = authUserProvider.authUser?.id;
+
+    String? userId = widget.user?.id;
 
     if (userId != null) {
       getLessons(userId);
@@ -69,7 +72,10 @@ class _LessonTabState extends State<LessonTab> {
     }
 
     if (lessons.isEmpty) {
-      return const EmptyStatus();
+      return EmptyStatus(
+        tabName: "Lessons",
+        isAuthUser: widget.user!.id == authUserProvider.authUser!.id,
+      );
     }
 
     return ListView.builder(
@@ -77,7 +83,7 @@ class _LessonTabState extends State<LessonTab> {
       itemCount: lessons.length,
       itemBuilder: (context, index) {
         Lesson lesson = lessons[index];
-        print("lesson : ${lesson.images![0]}");
+
         return Container(
           padding: const EdgeInsets.all(4),
           margin: const EdgeInsets.all(8),
@@ -170,9 +176,11 @@ class _LessonTabState extends State<LessonTab> {
               ),
             ),
             hoverColor: kPrimaryColor,
-            onTap: () {
-              // Handle tap
-            },
+            onTap: () => Navigator.pushNamed(
+              context,
+              DetailsScreen.routeName,
+              arguments: ProductDetailsArguments(lesson: lessons[index]),
+            ),
           ),
         );
       },

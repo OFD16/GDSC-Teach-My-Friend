@@ -23,6 +23,7 @@ class InitScreen extends StatefulWidget {
 
 class _InitScreenState extends State<InitScreen> {
   int currentSelectedIndex = 0;
+  User? authUser;
 
   void updateCurrentIndex(int index) {
     setState(() {
@@ -37,6 +38,7 @@ class _InitScreenState extends State<InitScreen> {
 
     await AuthStorage().getAuthUser().then((User? user) {
       if (user != null) {
+        authUser = user;
         print("authUser is $user");
         authUserProvider.setAuthUser(user);
       }
@@ -48,18 +50,19 @@ class _InitScreenState extends State<InitScreen> {
     setInitUser(context); // Pass the context parameter
   }
 
-  final pages = [
-    const HomeScreen(),
-    const FavoriteScreen(),
-    const CreateContentScreen(),
-    const Center(
-      child: Text("Chat"),
-    ),
-    ProfileScreen()
-  ];
-
   @override
   Widget build(BuildContext context) {
+    // Initialize pages here, where authUser is accessible
+    final pages = [
+      const HomeScreen(),
+      const FavoriteScreen(),
+      const CreateContentScreen(),
+      const Center(
+        child: Text("Chat"),
+      ),
+      ProfileScreen(user: authUser)
+    ];
+
     return Scaffold(
       body: pages[currentSelectedIndex],
       bottomNavigationBar: BottomNavigationBar(
