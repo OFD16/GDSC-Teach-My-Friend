@@ -132,4 +132,34 @@ class LessonService {
       return [];
     }
   }
+
+  Future<List<Lesson>> getLessons() async {
+    try {
+      final doc = await _lessonsCollection.get();
+      if (doc.docs.isNotEmpty) {
+        return doc.docs
+            .map((doc) => Lesson.fromJson(doc.data() as Map<String, dynamic>))
+            .toList();
+      } else {
+        // Fluttertoast.showToast(
+        //   msg: 'Lesson not found',
+        //   gravity: ToastGravity.TOP,
+        //   backgroundColor: Colors.redAccent,
+        //   textColor: Colors.white,
+        //   fontSize: 16.0,
+        // );
+        return [];
+      }
+    } catch (e) {
+      print('Error getting coupon: $e');
+      Fluttertoast.showToast(
+        msg: 'Error occured when trying to get lessons: $e',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return [];
+    }
+  }
 }

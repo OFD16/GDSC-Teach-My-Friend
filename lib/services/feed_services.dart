@@ -1,3 +1,4 @@
+import 'package:Sharey/models/Lesson.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FeedService {

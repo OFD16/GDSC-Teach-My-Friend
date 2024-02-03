@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: initCouponIDs.length,
                       itemBuilder: (BuildContext context, int index) {
                         return DiscountBanner(
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Categories(selected: 0),
               const SpecialOffers(),
               const SizedBox(height: 20),
-              const PopularProducts(),
+              PopularProducts(),
               const SizedBox(height: 20),
             ],
           ),
