@@ -54,4 +54,16 @@ class CouponService {
       return [];
     }
   }
+
+  Future<List<Coupon>> getAvailableCoupons() async {
+    try {
+      final querySnapshot = await _couponsCollection.get();
+      return querySnapshot.docs
+          .map((doc) => Coupon.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error getting available coupons: $e');
+      return [];
+    }
+  }
 }

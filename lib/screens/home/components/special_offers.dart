@@ -1,12 +1,42 @@
+import 'package:Sharey/helpers/index.dart';
+import 'package:Sharey/models/Coupon.dart';
 import 'package:Sharey/screens/products/products_screen.dart';
+import 'package:Sharey/services/coupon_services.dart';
 import 'package:flutter/material.dart';
 
 import 'section_title.dart';
 
-class SpecialOffers extends StatelessWidget {
+class SpecialOffers extends StatefulWidget {
   const SpecialOffers({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<SpecialOffers> createState() => _SpecialOffersState();
+}
+
+class _SpecialOffersState extends State<SpecialOffers> {
+  CouponService couponService = CouponService();
+
+  List<Coupon> initCoupons = [];
+
+  bool isLoading = true;
+
+  Future<void> _fetchFeed() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<Coupon> coupons = await couponService.getAvailableCoupons();
+    setState(() {
+      initCoupons = coupons;
+      isLoading = false;
+    });
+  }
+
+  void initState() {
+    super.initState();
+    _fetchFeed();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,30 +46,30 @@ class SpecialOffers extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SectionTitle(
             title: "Special for you",
-            press: () {},
+            press: () {
+              Navigator.pushNamed(
+                context,
+                ProductsScreen.routeName,
+                arguments: ProductsArguments(coupons: initCoupons),
+              );
+            },
           ),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              SpecialOfferCard(
-                image: "assets/images/Image Banner 2.png",
-                category: "Smartphone",
-                numOfBrands: 18,
-                press: () {
-                  Navigator.pushNamed(context, ProductsScreen.routeName);
+              ...List.generate(
+                initCoupons.length,
+                (index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: SpecialOfferCard(
+                      coupon: initCoupons[index],
+                    ),
+                  );
                 },
               ),
-              SpecialOfferCard(
-                image: "assets/images/Image Banner 3.png",
-                category: "Fashion",
-                numOfBrands: 24,
-                press: () {
-                  Navigator.pushNamed(context, ProductsScreen.routeName);
-                },
-              ),
-              const SizedBox(width: 20),
             ],
           ),
         ),
@@ -51,15 +81,12 @@ class SpecialOffers extends StatelessWidget {
 class SpecialOfferCard extends StatelessWidget {
   const SpecialOfferCard({
     Key? key,
-    required this.category,
-    required this.image,
-    required this.numOfBrands,
-    required this.press,
+    required this.coupon,
+    this.press,
   }) : super(key: key);
 
-  final String category, image;
-  final int numOfBrands;
-  final GestureTapCallback press;
+  final Coupon coupon;
+  final GestureTapCallback? press;
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +101,12 @@ class SpecialOfferCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: Stack(
               children: [
-                Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                ),
+                isLink(coupon.images![0])
+                    ? Image.network(coupon.images![0], fit: BoxFit.cover)
+                    : Image.asset(
+                        coupon.images![0],
+                        fit: BoxFit.cover,
+                      ),
                 Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
@@ -102,13 +131,15 @@ class SpecialOfferCard extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                       children: [
                         TextSpan(
-                          text: "$category\n",
+                          text: "${coupon.title}\n",
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        TextSpan(text: "$numOfBrands Brands")
+                        TextSpan(
+                            text:
+                                "${coupon.brand} ${coupon.couponOwners?.length}/${coupon.count}"),
                       ],
                     ),
                   ),

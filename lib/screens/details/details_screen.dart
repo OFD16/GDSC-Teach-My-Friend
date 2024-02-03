@@ -36,6 +36,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     ProductDetailsArguments args =
         ModalRoute.of(context)!.settings.arguments as ProductDetailsArguments;
     user = await getUser(args.lesson.ownerId!);
+    print("user in get user: $user");
     setState(() {}); // Trigger a rebuild after user data is fetched
   }
 
@@ -54,13 +55,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
     Lesson tempLesson =
         (ModalRoute.of(context)!.settings.arguments as ProductDetailsArguments)
             .lesson;
-    print("tempLesson: ${tempLesson.toJson()}");
+
     (ModalRoute.of(context)!.settings.arguments as ProductDetailsArguments)
         .lesson = tempLesson;
     tempLesson.students!.removeWhere(
         (element) => element == studentId); // remove the current user
 
-    print("tempLesson: ${tempLesson.toJson()}");
     lessonService.updateLesson(tempLesson.id, tempLesson).then((value) => {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -75,10 +75,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
     Lesson tempLesson =
         (ModalRoute.of(context)!.settings.arguments as ProductDetailsArguments)
             .lesson;
-    print("tempLesson: ${tempLesson.toJson()}");
 
     tempLesson.students!.add(studentId);
-    print("tempLesson: ${tempLesson.toJson()}");
+
     (ModalRoute.of(context)!.settings.arguments as ProductDetailsArguments)
         .lesson = tempLesson;
     await lessonService
@@ -102,6 +101,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         Provider.of<AuthUserProvider>(context, listen: false);
 
     final lesson = agrs.lesson;
+    print("user data: $user");
 
     bool isJoined = lesson.students!.contains(authUserProvider.authUser!.id);
     return Scaffold(

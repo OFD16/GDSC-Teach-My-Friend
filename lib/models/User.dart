@@ -1,5 +1,6 @@
 class User {
   User({
+    this.points,
     this.isEmailVerified,
     this.userRate,
     this.userName,
@@ -16,9 +17,9 @@ class User {
     this.isAdmin,
     required this.id,
   });
-
+  int? points;
   late bool? isEmailVerified, isAdmin;
-  late double? userRate;
+  late String? userRate;
   late String? firstName,
       lastName,
       userName,
@@ -34,9 +35,10 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      points: json["points"],
       isEmailVerified: json["isEmailVerified"],
       isAdmin: json["isAdmin"],
-      userRate: (json['userRate'] as double?)?.toDouble(),
+      userRate: json['userRate'],
       firstName: json["firstName"],
       lastName: json["lastName"],
       userName: json["userName"],
@@ -53,6 +55,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() => {
+        "points": points,
         "isEmailVerified": isEmailVerified,
         "isAdmin": isAdmin,
         "userRate": userRate,

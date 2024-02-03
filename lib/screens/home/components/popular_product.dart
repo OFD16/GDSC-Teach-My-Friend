@@ -46,7 +46,11 @@ class _PopularProductsState extends State<PopularProducts> {
           child: SectionTitle(
             title: "Popular Trainings",
             press: () {
-              Navigator.pushNamed(context, ProductsScreen.routeName);
+              Navigator.pushNamed(
+                context,
+                ProductsScreen.routeName,
+                arguments: ProductsArguments(lessons: initLessons),
+              );
             },
           ),
         ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RateCard extends StatelessWidget {
-  final double? rate;
+  final String? rate;
 
   RateCard({this.rate});
 
@@ -24,7 +24,7 @@ class RateCard extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                rate.toString(),
+                "$rate",
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black,
