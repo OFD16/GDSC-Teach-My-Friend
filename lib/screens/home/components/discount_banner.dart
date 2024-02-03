@@ -27,8 +27,8 @@ class _DiscountBannerState extends State<DiscountBanner> {
     } else {
       coupon = Coupon(
           id: '1',
-          title: 'test',
-          description: 'test',
+          title: '',
+          description: '',
           count: 4,
           pricePoint: 20,
           images: [],
