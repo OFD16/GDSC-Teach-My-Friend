@@ -104,7 +104,6 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
   }
 
   void onPressOnCategories(int tab) {
-    print("currentTab: $tab");
     setState(() {
       selectedCategory = tab;
     });
@@ -207,13 +206,11 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
               ),
               CarouselSlider(
                 items: categoriesList[selectedCategory].map<Widget>((cat) {
-                  print("selectedCategory: $selectedCategory");
                   return Builder(
                     builder: (BuildContext context) {
                       if (selectedCategory == 4) {
                         return CustomContentCard(
                           onImageUploaded: (data) {
-                            print("data: $data");
                             setState(() {
                               images = data["imageUrls"];
                               typeText = data["type"];

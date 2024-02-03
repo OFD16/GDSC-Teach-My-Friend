@@ -9,8 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../../services/image_picker_services.dart';
 
 class CustomContentCard extends StatefulWidget {
+  String? imageUrl;
   final ValueChanged<Map<String, dynamic>>? onImageUploaded;
-  const CustomContentCard({super.key, this.onImageUploaded});
+  CustomContentCard({super.key, this.onImageUploaded, this.imageUrl});
 
   @override
   State<CustomContentCard> createState() => _CustomContentCardState();
@@ -23,6 +24,14 @@ class _CustomContentCardState extends State<CustomContentCard> {
   final CloudStorageService _cloudStorageService = CloudStorageService();
   List<String> _imageUrls = [];
   bool _isUploading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.imageUrl != null) {
+      _imageUrls.add(widget.imageUrl!);
+    }
+  }
 
   // Use this method to open the image picker for selecting multiple images.
   void _pickImages() async {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../models/Lesson.dart';
+import '../../create_content/components/custom_content_card.dart';
 import '../../create_content/components/education_card.dart';
 import "../../create_content/data.dart";
 import '../../create_content/text_input.dart';
@@ -30,7 +31,14 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
     lessonList,
     artList,
     musicList,
-    sportList
+    [
+      {
+        "title": "Custom",
+        "image": "assets/icons/image_gallery.svg",
+        "isSelect": false,
+        "point": 0
+      }
+    ]
   ];
 
   @override
@@ -53,6 +61,9 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
             item["isSelect"] = true;
           });
           return;
+        } else {
+          selectedCategory = 4;
+          initialPage = 0;
         }
       }
     }
@@ -172,11 +183,23 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
           items: categoriesList[selectedCategory].map<Widget>((cat) {
             return Builder(
               builder: (BuildContext context) {
-                return EducationCard(
-                  education: cat,
-                  onTap: () => onPressOnEducation(cat),
-                  isSelected: cat["isSelect"],
-                );
+                if (selectedCategory == 4) {
+                  return CustomContentCard(
+                    imageUrl: widget.lesson.images![0],
+                    onImageUploaded: (data) {
+                      setState(() {
+                        images = data["imageUrls"];
+                        typeText = data["type"];
+                      });
+                    },
+                  );
+                } else {
+                  return EducationCard(
+                    education: cat,
+                    onTap: () => onPressOnEducation(cat),
+                    isSelected: cat["isSelect"],
+                  );
+                }
               },
             );
           }).toList(),
@@ -185,11 +208,11 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
             aspectRatio: 16 / 9,
             viewportFraction: 0.8,
             initialPage: initialPage,
-            enableInfiniteScroll: true,
-            reverse: false,
-            autoPlay: false,
-            autoPlayInterval: const Duration(milliseconds: 800),
-            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            // enableInfiniteScroll: true,
+            // reverse: false,
+            // autoPlay: false,
+            // autoPlayInterval: const Duration(milliseconds: 800),
+            // autoPlayAnimationDuration: const Duration(milliseconds: 800),
             autoPlayCurve: Curves.fastOutSlowIn,
             enlargeCenterPage: true,
             enlargeFactor: 0.3,
@@ -197,6 +220,43 @@ class _UpdateLessonBottomSheetState extends State<UpdateLessonBottomSheet> {
           ),
         ),
         const SizedBox(height: 20),
+        selectedCategory == 4
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    child: Text("Select a max student:",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ...types
+                              .map((type) => Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: ChoiceChip(
+                                      label: Text(type),
+                                      selected: typeText == type,
+                                      onSelected: (bool selected) {
+                                        setState(() {
+                                          typeText = type;
+                                        });
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox(),
         // TextInput components
         TextInput(
           title: "Title",
