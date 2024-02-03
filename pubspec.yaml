@@ -45,6 +45,8 @@ dependencies:
   shared_preferences: ^2.2.2 # for local storage
   
   carousel_slider: ^4.2.1 # for carousel slider
+  image_picker: ^1.0.7
+  firebase_storage: ^11.6.4
 
 dev_dependencies:
   flutter_test:

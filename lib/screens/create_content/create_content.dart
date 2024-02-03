@@ -1,3 +1,4 @@
+import 'package:Sharey/screens/create_content/components/custom_content_card.dart';
 import 'package:Sharey/screens/init_screen.dart';
 
 import 'package:Sharey/providers/auth_user_provider.dart';
@@ -34,7 +35,14 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
     lessonList,
     artList,
     musicList,
-    sportList
+    [
+      {
+        "title": "Custom",
+        "image": "assets/icons/image_gallery.svg",
+        "isSelect": false,
+        "point": 0
+      }
+    ]
   ];
 
   int selectedCategory = 0;
@@ -96,6 +104,7 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
   }
 
   void onPressOnCategories(int tab) {
+    print("currentTab: $tab");
     setState(() {
       selectedCategory = tab;
     });
@@ -198,13 +207,26 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
               ),
               CarouselSlider(
                 items: categoriesList[selectedCategory].map<Widget>((cat) {
+                  print("selectedCategory: $selectedCategory");
                   return Builder(
                     builder: (BuildContext context) {
-                      return EducationCard(
-                        education: cat,
-                        onTap: () => onPressOnEducation(cat),
-                        isSelected: cat["isSelect"],
-                      );
+                      if (selectedCategory == 4) {
+                        return CustomContentCard(
+                          onImageUploaded: (data) {
+                            print("data: $data");
+                            setState(() {
+                              images = data["imageUrls"];
+                              typeText = data["type"];
+                            });
+                          },
+                        );
+                      } else {
+                        return EducationCard(
+                          education: cat,
+                          onTap: () => onPressOnEducation(cat),
+                          isSelected: cat["isSelect"],
+                        );
+                      }
                     },
                   );
                 }).toList(),
@@ -213,11 +235,11 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
                   aspectRatio: 16 / 9,
                   viewportFraction: 0.8,
                   initialPage: 0,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: false,
-                  autoPlayInterval: const Duration(milliseconds: 800),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  // enableInfiniteScroll: true,
+                  // reverse: false,
+                  // autoPlay: false,
+                  // autoPlayInterval: const Duration(milliseconds: 800),
+                  // autoPlayAnimationDuration: const Duration(milliseconds: 800),
                   autoPlayCurve: Curves.fastOutSlowIn,
                   enlargeCenterPage: true,
                   enlargeFactor: 0.3,
@@ -226,6 +248,45 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              selectedCategory == 4
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          child: Text("Select a max student:",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                ...types
+                                    .map((type) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: ChoiceChip(
+                                            label: Text(type),
+                                            selected: typeText == type,
+                                            onSelected: (bool selected) {
+                                              setState(() {
+                                                typeText = type;
+                                              });
+                                            },
+                                          ),
+                                        ))
+                                    .toList(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
               TextInput(
                 title: "Title",
                 hintText: "Title of your content",

@@ -505,3 +505,5 @@ final List<Map<String, dynamic>> studentCount = [
     "value": 3,
   },
 ];
+
+final types = ["Sport", "Music", "Art", "Lesson"];

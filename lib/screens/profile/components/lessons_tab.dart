@@ -1,3 +1,4 @@
+import 'package:Sharey/helpers/is_link.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/profile/components/empty_status.dart';
 import 'package:Sharey/screens/profile/components/update_lesson_bottomsheet.dart';
@@ -45,6 +46,15 @@ class _LessonTabState extends State<LessonTab> {
     return lessons;
   }
 
+  ImageProvider<Object> getImageProvider(String imageUrl) {
+    print("isLİnk : ${isLink(imageUrl)}");
+    if (isLink(imageUrl)) {
+      return NetworkImage(imageUrl);
+    } else {
+      return AssetImage(imageUrl);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthUserProvider authUserProvider =
@@ -67,6 +77,7 @@ class _LessonTabState extends State<LessonTab> {
       itemCount: lessons.length,
       itemBuilder: (context, index) {
         Lesson lesson = lessons[index];
+        print("lesson : ${lesson.images![0]}");
         return Container(
           padding: const EdgeInsets.all(4),
           margin: const EdgeInsets.all(8),
@@ -83,7 +94,7 @@ class _LessonTabState extends State<LessonTab> {
                 color: kPrimaryColor,
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: AssetImage(lesson.images![0]),
+                  image: getImageProvider(lesson.images![0]),
                   fit: BoxFit.cover,
                 ),
               ),

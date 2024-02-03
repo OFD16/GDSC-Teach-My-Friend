@@ -40,11 +40,13 @@ class _DiscountBannerState extends State<DiscountBanner> {
 
   Future<void> _fetchCoupon() async {
     Coupon? initCoupon = await couponService.getCoupon(widget.couponID);
-    setState(() {
-      if (initCoupon != null && mounted) {
-        coupon = initCoupon;
-      }
-    });
+    if (mounted) {
+      setState(() {
+        if (initCoupon != null && mounted) {
+          coupon = initCoupon;
+        }
+      });
+    }
   }
 
   @override

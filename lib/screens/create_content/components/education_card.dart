@@ -1,4 +1,5 @@
 import 'package:Sharey/constants.dart';
+import 'package:Sharey/helpers/is_link.dart';
 import 'package:flutter/material.dart';
 
 import "./stroke_text.dart";
@@ -16,6 +17,7 @@ class EducationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("education: ${isLink(education["image"]!)}");
     return GestureDetector(
       key: ValueKey<String>(education["title"]!),
       onTap: onTap,
@@ -25,7 +27,9 @@ class EducationCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 5.0),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(education["image"]!),
+            image: isLink(education["image"]!)
+                ? NetworkImage(education["image"]!) as ImageProvider
+                : AssetImage(education["image"]!),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(20),

@@ -14,13 +14,13 @@ class LessonService {
         return Lesson.fromJson(doc.data() as Map<String, dynamic>);
       } else {
         print('Lesson not found');
-        Fluttertoast.showToast(
-          msg: 'Lesson not found',
-          gravity: ToastGravity.TOP,
-          backgroundColor: Colors.redAccent,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        // Fluttertoast.showToast(
+        //   msg: 'Lesson not found',
+        //   gravity: ToastGravity.TOP,
+        //   backgroundColor: Colors.redAccent,
+        //   textColor: Colors.white,
+        //   fontSize: 16.0,
+        // );
         return null;
       }
     } catch (e) {
@@ -111,13 +111,13 @@ class LessonService {
             .map((doc) => Lesson.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
       } else {
-        Fluttertoast.showToast(
-          msg: 'Lesson not found',
-          gravity: ToastGravity.TOP,
-          backgroundColor: Colors.redAccent,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        // Fluttertoast.showToast(
+        //   msg: 'Lesson not found',
+        //   gravity: ToastGravity.TOP,
+        //   backgroundColor: Colors.redAccent,
+        //   textColor: Colors.white,
+        //   fontSize: 16.0,
+        // );
         return [];
       }
     } catch (e) {
