@@ -2,6 +2,7 @@ import 'package:Sharey/screens/settings/components/admin_settings.dart';
 import 'package:Sharey/screens/settings/components/help_center.dart';
 import 'package:Sharey/screens/settings/components/notification_settings.dart';
 import 'package:Sharey/screens/settings/components/user_info_settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,6 +48,7 @@ class SettingsScreen extends StatelessWidget {
 
     void logOut() {
       AuthService authService = AuthService();
+      FirebaseAuth.instance.signOut();
       authService.signOut();
       authUserProvider.clearAuthUser();
       AuthStorage().removeAuthUser();

@@ -12,7 +12,20 @@
           "package_name": "com.sharey"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "706862147475-9hfqt5m7o4mtd2iat8pt13nbpo93mo0m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sharey",
+            "certificate_hash": "eeb0f60c70132ace866ca068c1d05b7ba8d7b6f4"
+          }
+        },
+        {
+          "client_id": "706862147475-f8oq417uv3j6lodhm67h4p798flcteeg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBRPuYbwnIEGRaVEyAICeIFoEjmL16HWus"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "706862147475-f8oq417uv3j6lodhm67h4p798flcteeg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "706862147475-ejdanc7ihb0a5d5e8mqnpjdhavibojo0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sharey"
+              }
+            }
+          ]
         }
       }
     }

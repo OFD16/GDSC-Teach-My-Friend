@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/models/User.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/services/cloud_storage_services.dart';
@@ -20,6 +21,7 @@ class ProfilePic extends StatefulWidget {
 }
 
 class _ProfilePicState extends State<ProfilePic> {
+  AuthStorage _authStorage = AuthStorage();
   final ImagePickerService _imagePickerService = ImagePickerService();
   final CloudStorageService _cloudStorageService = CloudStorageService();
   final UserService _userService = UserService();
@@ -36,11 +38,16 @@ class _ProfilePicState extends State<ProfilePic> {
         _isUploading = true;
       });
       String? downloadUrl = await _cloudStorageService.uploadFile(
-          file, "lessonId+${image.name}+${DateTime.now()}", "user_images");
+          file, "${image.name}+${DateTime.now()}", "user_images");
       print("downloadUrl: $downloadUrl");
 
+      AuthUserProvider authUserProvider =
+          Provider.of<AuthUserProvider>(context, listen: false);
+
       user.photoUrl = downloadUrl;
-      _userService.updateUser(user);
+      await _userService.updateUser(user);
+      _authStorage.setAuthUser(user);
+      authUserProvider.setAuthUser(user);
       setState(() {
         _imageUrls.add(downloadUrl!);
 
@@ -61,11 +68,14 @@ class _ProfilePicState extends State<ProfilePic> {
       });
       // Process the captured image
       String? downloadUrl = await _cloudStorageService.uploadFile(
-          file, "${image.name}+${DateTime.now()}", "lesson_images");
-      print("downloadUrl: $downloadUrl");
+          file, "${image.name}+${DateTime.now()}", "user_images");
 
+      AuthUserProvider authUserProvider =
+          Provider.of<AuthUserProvider>(context, listen: false);
       user.photoUrl = downloadUrl;
-      _userService.updateUser(user);
+      await _userService.updateUser(user);
+      _authStorage.setAuthUser(user);
+      authUserProvider.setAuthUser(user);
       setState(() {
         _imageUrls.add(downloadUrl!);
 
@@ -75,6 +85,7 @@ class _ProfilePicState extends State<ProfilePic> {
   }
 
   void openDialog(User user) {
+    print("user ${user.toJson()}");
     showAdaptiveDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog.adaptive(
@@ -128,25 +139,25 @@ class _ProfilePicState extends State<ProfilePic> {
               ? Positioned(
                   right: -16,
                   bottom: 0,
-                  child: InkWell(
-                    onTap: () {
-                      openDialog(authUser);
-                    },
-                    child: SizedBox(
-                      height: 46,
-                      width: 46,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            side: const BorderSide(color: Colors.white),
-                          ),
-                          backgroundColor: const Color(0xFFF5F6F9),
+                  child: SizedBox(
+                    height: 46,
+                    width: 46,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          side: const BorderSide(color: Colors.white),
                         ),
-                        onPressed: () {},
-                        child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
+                        backgroundColor: const Color(0xFFF5F6F9),
                       ),
+                      onPressed: () {},
+                      child: InkWell(
+                          onTap: () {
+                            openDialog(authUser);
+                          },
+                          child:
+                              SvgPicture.asset("assets/icons/Camera Icon.svg")),
                     ),
                   ),
                 )

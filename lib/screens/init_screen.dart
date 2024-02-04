@@ -2,6 +2,7 @@ import 'package:Sharey/constants.dart';
 import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/models/User.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
+import 'package:Sharey/screens/chat.dart/chat_screen.dart';
 import 'package:Sharey/screens/create_content/create_content.dart';
 import 'package:Sharey/screens/favorite/favorite_screen.dart';
 import 'package:Sharey/screens/home/home_screen.dart';
@@ -57,9 +58,7 @@ class _InitScreenState extends State<InitScreen> {
       const HomeScreen(),
       const FavoriteScreen(),
       const CreateContentScreen(),
-      const Center(
-        child: Text("Chat"),
-      ),
+      const ChatScreen(),
       ProfileScreen(user: authUser)
     ];
 

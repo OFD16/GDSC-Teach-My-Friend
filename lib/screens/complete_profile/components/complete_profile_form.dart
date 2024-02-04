@@ -152,6 +152,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 User tempUser = authUserProvider.authUser!;
+                tempUser.userRate = "4.5";
                 tempUser.firstName = firstNameController.text;
                 tempUser.lastName = lastNameController.text;
                 tempUser.phoneNumber = phoneNumberController.text;

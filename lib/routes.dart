@@ -1,3 +1,4 @@
+import 'package:Sharey/screens/chat.dart/chat_screen.dart';
 import 'package:Sharey/screens/create_content/create_content.dart';
 import 'package:Sharey/screens/products/products_screen.dart';
 import 'package:Sharey/screens/settings/settings_screen.dart';
@@ -34,4 +35,5 @@ final Map<String, WidgetBuilder> routes = {
   ProfileScreen.routeName: (context) => ProfileScreen(),
   CreateContentScreen.routeName: (context) => const CreateContentScreen(),
   SettingsScreen.routeName: (context) => const SettingsScreen(),
+  ChatScreen.routeName: (context) => const ChatScreen(),
 };

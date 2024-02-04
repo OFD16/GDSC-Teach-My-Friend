@@ -53,7 +53,8 @@ class User {
       lastSignInTime: DateTime.tryParse(json["lastSignInTime"] ?? ""),
       photoUrl: json["photoURL"],
       id: json["id"],
-      favourites: List<String>.from(json["favourites"].map((x) => x)),
+      favourites:
+          (json["favourites"] as List?)?.map((x) => x.toString()).toList(),
     );
   }
 
