@@ -32,7 +32,7 @@ class UserService {
     }
   }
 
-  Future<void> updateUser(User user) async {
+  Future<bool> updateUser(User user) async {
     try {
       await _usersCollection.doc(user.id).update(user.toJson());
       Fluttertoast.showToast(
@@ -42,9 +42,17 @@ class UserService {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      print('User updated successfully');
+      return true;
     } catch (e) {
       print('Error updating user: $e');
+      Fluttertoast.showToast(
+        msg: 'User updated failed with error: $e',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
     }
   }
 

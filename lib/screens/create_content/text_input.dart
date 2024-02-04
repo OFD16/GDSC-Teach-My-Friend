@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 class TextInput extends StatelessWidget {
-  final String? hintText, title;
+  final String? hintText, title, initialValue;
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final Widget? prefixIcon;
@@ -13,6 +13,7 @@ class TextInput extends StatelessWidget {
 
   TextInput({
     Key? key,
+    this.initialValue,
     this.hintText,
     this.title,
     this.onChanged,
@@ -30,6 +31,10 @@ class TextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (controller != null && initialValue != null) {
+      controller!.text = initialValue!;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Column(
@@ -50,6 +55,7 @@ class TextInput extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            initialValue: controller != null ? null : initialValue,
             controller: controller,
             keyboardType: keyboardType,
             onChanged: onChanged,
