@@ -58,4 +58,24 @@ class AuthStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("rememberMePassword");
   }
+
+  Future<bool> pushNotificationsEnabled() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("pushNotificationsEnabled") ?? false;
+  }
+
+  setPushNotificationsEnabled(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("pushNotificationsEnabled", value);
+  }
+
+  Future<bool> emailNotificationsEnabled() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("emailNotificationsEnabled") ?? false;
+  }
+
+  setEmailNotificationsEnabled(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("emailNotificationsEnabled", value);
+  }
 }
