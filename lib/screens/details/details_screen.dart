@@ -172,7 +172,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 ProductDescription(
                   pressOnSeeMore: () {},
                   lesson: lesson,
-                  isFavourite: true,
+                  isFavourite: lesson.likes!.contains(user!.id),
                   user: user,
                 ),
                 TopRoundedContainer(

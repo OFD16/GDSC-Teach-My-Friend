@@ -89,4 +89,52 @@ class UserService {
       return [];
     }
   }
+
+  Future<void> addUserFavorite(String userId, String lessonId) async {
+    try {
+      await _usersCollection.doc(userId).update({
+        'favourites': FieldValue.arrayUnion([lessonId])
+      });
+      Fluttertoast.showToast(
+        msg: 'Lesson added to favorites',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      print('Error adding favorite: $e');
+      Fluttertoast.showToast(
+        msg: 'Error adding favorite',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
+  Future<void> removeUserFavorite(String userId, String lessonId) async {
+    try {
+      await _usersCollection.doc(userId).update({
+        'favourites': FieldValue.arrayRemove([lessonId])
+      });
+      Fluttertoast.showToast(
+        msg: 'Lesson removed from favorites',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      print('Error removing favorite: $e');
+      Fluttertoast.showToast(
+        msg: 'Error removing favorite',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
 }

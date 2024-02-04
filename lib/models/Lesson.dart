@@ -12,6 +12,7 @@ class Lesson {
     this.updatedAt,
     this.title,
     this.type,
+    this.likes = const [],
   });
 
   String? ownerId;
@@ -25,6 +26,7 @@ class Lesson {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? title, type;
+  List<String> likes = [];
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
     return Lesson(
@@ -44,6 +46,9 @@ class Lesson {
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
       title: json["title"],
       type: json["type"],
+      likes: json["likes"] == null
+          ? []
+          : List<String>.from(json["likes"]!.map((x) => x)),
     );
   }
 
@@ -60,5 +65,6 @@ class Lesson {
         "updatedAt": updatedAt?.toIso8601String(),
         "title": title,
         "type": type,
+        "likes": likes?.map((x) => x).toList(),
       };
 }

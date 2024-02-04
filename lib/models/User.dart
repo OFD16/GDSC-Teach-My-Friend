@@ -15,6 +15,7 @@ class User {
     this.email,
     this.password,
     this.isAdmin,
+    this.favourites = const [],
     required this.id,
   });
   int? points;
@@ -32,6 +33,7 @@ class User {
   late DateTime? lastSignInTime;
   late String? photoUrl;
   final String? id;
+  List<String>? favourites;
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -51,6 +53,7 @@ class User {
       lastSignInTime: DateTime.tryParse(json["lastSignInTime"] ?? ""),
       photoUrl: json["photoURL"],
       id: json["id"],
+      favourites: List<String>.from(json["favourites"].map((x) => x)),
     );
   }
 
@@ -71,6 +74,7 @@ class User {
         "lastSignInTime": lastSignInTime?.toIso8601String(),
         "photoURL": photoUrl,
         "id": id,
+        "favourites": List<dynamic>.from(favourites!.map((x) => x)),
       };
 
   User copyWith({
@@ -90,6 +94,7 @@ class User {
     DateTime? lastSignInTime,
     String? photoUrl,
     String? id,
+    List<String>? favourites,
   }) {
     return User(
       points: points ?? this.points,
@@ -108,6 +113,7 @@ class User {
       lastSignInTime: lastSignInTime ?? this.lastSignInTime,
       photoUrl: photoUrl ?? this.photoUrl,
       id: id ?? this.id,
+      favourites: favourites ?? this.favourites,
     );
   }
 }

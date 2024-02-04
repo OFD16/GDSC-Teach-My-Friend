@@ -6,12 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../constants.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({
+  ProductCard({
     Key? key,
     this.width = 140,
     this.aspectRetio = 1.02,
     required this.lesson,
     required this.onPress,
+    this.onFavouritePress,
     required this.isFavourite,
   }) : super(key: key);
 
@@ -19,6 +20,7 @@ class ProductCard extends StatelessWidget {
   final bool isFavourite;
   final Lesson lesson;
   final VoidCallback onPress;
+  VoidCallback? onFavouritePress;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +76,11 @@ class ProductCard extends StatelessWidget {
                 ),
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
-                  onTap: () {},
+                  onTap: () {
+                    if (onFavouritePress != null) {
+                      onFavouritePress!();
+                    }
+                  },
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     height: 24,

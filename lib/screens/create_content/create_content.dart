@@ -58,6 +58,7 @@ class _CreateContentScreenState extends State<CreateContentScreen> {
 
   Future<void> createTeachingContent(User authUser) async {
     Lesson lesson = Lesson(
+      likes: [],
       ownerId: authUser.id,
       level: levelText,
       title: titleController.text,

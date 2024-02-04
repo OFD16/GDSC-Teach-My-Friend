@@ -1,9 +1,11 @@
 import 'package:Sharey/models/Lesson.dart';
+import 'package:Sharey/services/user_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LessonService {
+  UserService userService = UserService();
   final CollectionReference _lessonsCollection =
       FirebaseFirestore.instance.collection('lessons');
 
@@ -160,6 +162,85 @@ class LessonService {
         fontSize: 16.0,
       );
       return [];
+    }
+  }
+
+  Future<List<Lesson>> getFavouriteLessons(List<String> favouriteIds) async {
+    try {
+      final doc =
+          await _lessonsCollection.where('id', whereIn: favouriteIds).get();
+      if (doc.docs.isNotEmpty) {
+        return doc.docs
+            .map((doc) => Lesson.fromJson(doc.data() as Map<String, dynamic>))
+            .toList();
+      } else {
+        // Fluttertoast.showToast(
+        //   msg: 'Lesson not found',
+        //   gravity: ToastGravity.TOP,
+        //   backgroundColor: Colors.redAccent,
+        //   textColor: Colors.white,
+        //   fontSize: 16.0,
+        // );
+        return [];
+      }
+    } catch (e) {
+      print('Error getting coupon: $e');
+      Fluttertoast.showToast(
+        msg: 'Error occured when trying to get lessons: $e',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return [];
+    }
+  }
+
+  Future<void> likeLesson(String lessonId, String userId) async {
+    try {
+      await _lessonsCollection.doc(lessonId).update({
+        'likes': FieldValue.arrayUnion([userId])
+      });
+      await userService.addUserFavorite(userId, lessonId);
+      Fluttertoast.showToast(
+        msg: 'Lesson liked successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error liking lesson',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
+  Future<void> unlikeLesson(String lessonId, String userId) async {
+    try {
+      await _lessonsCollection.doc(lessonId).update({
+        'likes': FieldValue.arrayRemove([userId])
+      });
+      await userService.removeUserFavorite(userId, lessonId);
+      Fluttertoast.showToast(
+        msg: 'Lesson unliked successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error unliking lesson',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 }

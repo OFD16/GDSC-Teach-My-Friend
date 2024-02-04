@@ -1,10 +1,14 @@
 import 'package:Sharey/models/Lesson.dart';
+import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/home/components/special_offers.dart';
+import 'package:Sharey/services/lesson_services.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/product_card.dart';
 import '../../models/Coupon.dart';
+import '../../models/User.dart';
 import '../details/details_screen.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -17,6 +21,7 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  LessonService lessonService = LessonService();
   List<Lesson> initLessons = [];
   List<Coupon> initCoupons = [];
   String title = "Products";
@@ -50,11 +55,26 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
+  void likeLesson(Lesson lesson) async {
+    User authUser =
+        Provider.of<AuthUserProvider>(context, listen: false).authUser!;
+
+    await lessonService.likeLesson(lesson.id!, authUser.id!);
+  }
+
+  void unlikeLesson(Lesson lesson) async {
+    User authUser =
+        Provider.of<AuthUserProvider>(context, listen: false).authUser!;
+
+    await lessonService.unlikeLesson(lesson.id!, authUser.id!);
+  }
+
   @override
   Widget build(BuildContext context) {
     print("lessonslist screen2: ${initLessons.toList()}");
     print("initCoupons screen2: ${initCoupons.toList()}");
-
+    AuthUserProvider authUserProvider =
+        Provider.of<AuthUserProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -76,8 +96,27 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ProductCard(
-                      isFavourite: false,
+                      isFavourite: initLessons[index]
+                          .likes
+                          .contains(authUserProvider.authUser!.id),
                       lesson: initLessons[index],
+                      onFavouritePress: () {
+                        setState(() {
+                          if (initLessons[index]
+                              .likes
+                              .contains(authUserProvider.authUser!.id)) {
+                            initLessons[index]
+                                .likes
+                                .remove(authUserProvider.authUser!.id);
+                            unlikeLesson(initLessons[index]);
+                          } else {
+                            initLessons[index]
+                                .likes
+                                .add(authUserProvider.authUser!.id!);
+                            likeLesson(initLessons[index]);
+                          }
+                        });
+                      },
                       onPress: () => Navigator.pushNamed(
                         context,
                         DetailsScreen.routeName,
