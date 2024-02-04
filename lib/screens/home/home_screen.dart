@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-              Categories(selected: 0),
+              Categories(selected: 4),
               const SpecialOffers(),
               const SizedBox(height: 20),
               PopularProducts(),

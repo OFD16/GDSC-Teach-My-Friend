@@ -156,6 +156,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 tempUser.lastName = lastNameController.text;
                 tempUser.phoneNumber = phoneNumberController.text;
                 tempUser.address = addressController.text;
+                tempUser.points = 500;
                 userService.updateUser(tempUser);
 
                 authUserProvider.updateAuthUser(tempUser);
