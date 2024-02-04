@@ -14,10 +14,9 @@ class AdminSettings extends StatefulWidget {
 
 class _AdminSettingsState extends State<AdminSettings> {
   List<Widget> tabs = [
-    EditAdmin(),
-    RemoveAdmin(),
-    CreateCoupon(),
-    RemoveCoupon(),
+    const EditAdmin(),
+    const CreateCoupon(),
+    const RemoveCoupon(),
   ];
 
   void openBottomSheet(BuildContext context, Widget tab) {
@@ -59,13 +58,13 @@ class _AdminSettingsState extends State<AdminSettings> {
         ListTile(
           title: const Text('Create Coupon'),
           onTap: () {
-            openBottomSheet(context, tabs[2]);
+            openBottomSheet(context, tabs[1]);
           },
         ),
         ListTile(
           title: const Text('Remove Coupon'),
           onTap: () {
-            openBottomSheet(context, tabs[3]);
+            openBottomSheet(context, tabs[2]);
           },
         ),
       ],

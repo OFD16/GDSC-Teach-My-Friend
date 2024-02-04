@@ -5,16 +5,22 @@ import '../../constants.dart';
 class TextInput extends StatelessWidget {
   final String? hintText, title;
   final TextEditingController? controller;
+  final TextInputType keyboardType;
   final Widget? prefixIcon;
+  final Widget? trailing;
   void Function(String)? onChanged;
+  void Function()? onFinish;
 
   TextInput({
     Key? key,
     this.hintText,
     this.title,
     this.onChanged,
+    this.onFinish,
     this.prefixIcon,
+    this.trailing,
     this.controller,
+    this.keyboardType = TextInputType.text,
   }) : super(key: key);
 
   static const searchOutlineInputBorder = OutlineInputBorder(
@@ -29,17 +35,28 @@ class TextInput extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title != null && title != ""
-              ? Text(
-                  title!,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                )
-              : const SizedBox(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              title != null && title != ""
+                  ? Text(
+                      title!,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    )
+                  : const SizedBox(),
+              trailing ?? const SizedBox(),
+            ],
+          ),
           const SizedBox(height: 8),
           TextFormField(
             controller: controller,
+            keyboardType: keyboardType,
             onChanged: onChanged,
+            onEditingComplete: onFinish,
+            onSaved: (v) => {
+              onFinish,
+            },
             decoration: InputDecoration(
               filled: true,
               fillColor: kSecondaryColor.withOpacity(0.1),

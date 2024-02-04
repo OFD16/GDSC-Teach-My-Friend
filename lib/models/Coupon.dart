@@ -13,17 +13,17 @@ class Coupon {
     this.title,
   });
 
-  final String? brand;
-  final String? brandId;
-  final int? count;
-  final List<String>? couponOwners;
-  final String? description;
-  final String? id;
-  final List<String>? images;
-  final int? pricePoint;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final String? title;
+  String? brand;
+  String? brandId;
+  int? count;
+  List<String>? couponOwners;
+  String? description;
+  String? id;
+  List<String>? images;
+  int? pricePoint;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? title;
 
   factory Coupon.fromJson(Map<String, dynamic> json) {
     return Coupon(

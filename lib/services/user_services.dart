@@ -70,7 +70,6 @@ class UserService {
       List<User> users = [];
       var res = await _usersCollection
           .where('firstName', isGreaterThanOrEqualTo: query)
-          .where('lastName', isGreaterThanOrEqualTo: query)
           .get();
 
       for (var doc in res.docs) {

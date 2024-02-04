@@ -30,7 +30,25 @@ class CouponService {
   }
 
   Future<void> createCoupon(Coupon coupon) async {
-    // await _couponsCollection.add(coupon.toMap());
+    try {
+      await _couponsCollection.doc(coupon.id).set(coupon.toJson());
+      Fluttertoast.showToast(
+        msg: 'Coupon created successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      print('Error creating coupon: $e');
+      Fluttertoast.showToast(
+        msg: 'Coupon created failed please try again',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
   Future<void> updateCoupon(String couponId, Coupon updatedCoupon) async {
@@ -64,6 +82,20 @@ class CouponService {
     } catch (e) {
       print('Error getting available coupons: $e');
       return [];
+    }
+  }
+
+  Future<Coupon?> findCouponByBrand(String brand) async {
+    try {
+      final querySnapshot = await _couponsCollection
+          .where('brand', isEqualTo: brand)
+          .limit(1)
+          .get();
+      return Coupon.fromJson(
+          querySnapshot.docs.first.data() as Map<String, dynamic>);
+    } catch (e) {
+      print('Error finding coupon by brand: $e');
+      return null;
     }
   }
 }

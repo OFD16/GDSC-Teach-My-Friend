@@ -11,7 +11,9 @@ import '../../../services/image_picker_services.dart';
 class CustomContentCard extends StatefulWidget {
   String? imageUrl;
   final ValueChanged<Map<String, dynamic>>? onImageUploaded;
-  CustomContentCard({super.key, this.onImageUploaded, this.imageUrl});
+  String? imagePath;
+  CustomContentCard(
+      {super.key, this.onImageUploaded, this.imageUrl, this.imagePath});
 
   @override
   State<CustomContentCard> createState() => _CustomContentCardState();
@@ -43,7 +45,9 @@ class _CustomContentCardState extends State<CustomContentCard> {
         _isUploading = true;
       });
       String? downloadUrl = await _cloudStorageService.uploadFile(
-          file, "lessonId+${image.name}+${DateTime.now()}", "lesson_images");
+          file,
+          "${image.name}+${DateTime.now()}",
+          widget.imagePath ?? "lesson_images");
       print("downloadUrl: $downloadUrl");
       setState(() {
         _imageUrls.add(downloadUrl!);
@@ -67,7 +71,9 @@ class _CustomContentCardState extends State<CustomContentCard> {
       });
       // Process the captured image
       String? downloadUrl = await _cloudStorageService.uploadFile(
-          file, "${image.name}+${DateTime.now()}", "lesson_images");
+          file,
+          "${image.name}+${DateTime.now()}",
+          widget.imagePath ?? "lesson_images");
       print("downloadUrl: $downloadUrl");
       setState(() {
         _imageUrls.add(downloadUrl!);
