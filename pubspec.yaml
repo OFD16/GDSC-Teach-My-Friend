@@ -43,7 +43,7 @@ dependencies:
   firebase_auth: ^4.16.0 # for firebase
   cloud_firestore: ^4.14.0 # for firebase
   shared_preferences: ^2.2.2 # for local storage
-  
+  webview_flutter: ^4.5.0 # for webview
   carousel_slider: ^4.2.1 # for carousel slider
   image_picker: ^1.0.7
   firebase_storage: ^11.6.4
