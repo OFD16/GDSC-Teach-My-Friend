@@ -72,4 +72,42 @@ class User {
         "photoURL": photoUrl,
         "id": id,
       };
+
+  User copyWith({
+    int? points,
+    bool? isEmailVerified,
+    bool? isAdmin,
+    String? userRate,
+    String? firstName,
+    String? lastName,
+    String? userName,
+    String? phoneNumber,
+    String? address,
+    String? email,
+    String? password,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? lastSignInTime,
+    String? photoUrl,
+    String? id,
+  }) {
+    return User(
+      points: points ?? this.points,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+      isAdmin: isAdmin ?? this.isAdmin,
+      userRate: userRate ?? this.userRate,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      userName: userName ?? this.userName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      address: address ?? this.address,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      lastSignInTime: lastSignInTime ?? this.lastSignInTime,
+      photoUrl: photoUrl ?? this.photoUrl,
+      id: id ?? this.id,
+    );
+  }
 }

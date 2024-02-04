@@ -29,10 +29,13 @@ class TextInput extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title ?? "Title:",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          title != null && title != ""
+              ? Text(
+                  title!,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                )
+              : const SizedBox(),
           const SizedBox(height: 8),
           TextFormField(
             controller: controller,

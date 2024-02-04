@@ -1,5 +1,7 @@
 import 'package:Sharey/models/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UserService {
   final CollectionReference _usersCollection =
@@ -33,6 +35,13 @@ class UserService {
   Future<void> updateUser(User user) async {
     try {
       await _usersCollection.doc(user.id).update(user.toJson());
+      Fluttertoast.showToast(
+        msg: 'User updated successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       print('User updated successfully');
     } catch (e) {
       print('Error updating user: $e');
@@ -48,7 +57,29 @@ class UserService {
     }
   }
 
-  Stream<QuerySnapshot> getUsers() {
-    return _usersCollection.snapshots();
+  Future<List<User>> getUsers() {
+    return _usersCollection.get().then((querySnapshot) {
+      return querySnapshot.docs
+          .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
+  }
+
+  Future<List<User>> searchUsers(String query) async {
+    try {
+      List<User> users = [];
+      var res = await _usersCollection
+          .where('firstName', isGreaterThanOrEqualTo: query)
+          .where('lastName', isGreaterThanOrEqualTo: query)
+          .get();
+
+      for (var doc in res.docs) {
+        users.add(User.fromJson(doc.data() as Map<String, dynamic>));
+      }
+      return users;
+    } catch (e) {
+      print('Error searching users: $e');
+      return [];
+    }
   }
 }
