@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'edit_admin_bottomsheet.dart';
 import 'create_coupon_bottomsheet.dart';
-import 'remove_admin_bottomsheet.dart';
 import 'remove_coupon_bottomsheet.dart';
 
 class AdminSettings extends StatefulWidget {
@@ -62,7 +61,7 @@ class _AdminSettingsState extends State<AdminSettings> {
           },
         ),
         ListTile(
-          title: const Text('Remove Coupon'),
+          title: const Text('Enable/Disable Coupon'),
           onTap: () {
             openBottomSheet(context, tabs[2]);
           },

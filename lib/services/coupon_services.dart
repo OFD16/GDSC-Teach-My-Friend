@@ -73,9 +73,15 @@ class CouponService {
     }
   }
 
-  Future<List<Coupon>> getAvailableCoupons() async {
+  Future<List<Coupon>> getAvailableCoupons({bool isFiltered = false}) async {
     try {
       final querySnapshot = await _couponsCollection.get();
+      if (isFiltered) {
+        return querySnapshot.docs
+            .map((doc) => Coupon.fromJson(doc.data() as Map<String, dynamic>))
+            .where((coupon) => coupon.enable == true)
+            .toList();
+      }
       return querySnapshot.docs
           .map((doc) => Coupon.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
@@ -96,6 +102,31 @@ class CouponService {
     } catch (e) {
       print('Error finding coupon by brand: $e');
       return null;
+    }
+  }
+
+  Future<bool> removeCoupon(Coupon coupon) async {
+    try {
+      coupon.enable == false ? coupon.enable = true : coupon.enable = false;
+      await _couponsCollection.doc(coupon.id).update(coupon.toJson());
+      Fluttertoast.showToast(
+        msg: 'Coupon disabled successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return true;
+    } catch (e) {
+      print('Error removing coupon: $e');
+      Fluttertoast.showToast(
+        msg: 'Coupon disabled failed please try again',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
     }
   }
 }

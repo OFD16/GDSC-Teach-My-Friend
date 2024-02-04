@@ -11,6 +11,7 @@ class Coupon {
     this.createdAt,
     this.updatedAt,
     this.title,
+    this.enable = true,
   });
 
   String? brand;
@@ -24,6 +25,7 @@ class Coupon {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? title;
+  bool enable;
 
   factory Coupon.fromJson(Map<String, dynamic> json) {
     return Coupon(
@@ -42,6 +44,7 @@ class Coupon {
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
       title: json["title"],
+      enable: json["enable"] ?? true,
     );
   }
 
@@ -57,5 +60,6 @@ class Coupon {
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "title": title,
+        "enable": enable,
       };
 }

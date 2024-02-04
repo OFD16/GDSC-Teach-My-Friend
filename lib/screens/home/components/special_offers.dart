@@ -32,7 +32,8 @@ class _SpecialOffersState extends State<SpecialOffers> {
     setState(() {
       isLoading = true;
     });
-    List<Coupon> coupons = await couponService.getAvailableCoupons();
+    List<Coupon> coupons =
+        await couponService.getAvailableCoupons(isFiltered: true);
     setState(() {
       initCoupons = coupons;
       isLoading = false;
@@ -255,17 +256,24 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
       padding: const EdgeInsets.only(left: 20),
       child: GestureDetector(
         onTap: () => {
-          if (widget.coupon.couponOwners!.contains(authUser!.id))
-            {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('You already have this coupon.'),
-                  duration: Duration(seconds: 2),
-                ),
-              ),
-            }
+          if (widget.press != null)
+            {widget.press!()}
           else
-            openDialog(),
+            {
+              if (widget.coupon.couponOwners!.contains(authUser!.id))
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('You already have this coupon.'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  ),
+                }
+              else
+                {
+                  openDialog(),
+                },
+            }
         },
         child: SizedBox(
           width: 242,
@@ -275,10 +283,11 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
             child: Stack(
               children: [
                 isLink(widget.coupon.images![0])
-                    ? Image.network(widget.coupon.images![0], fit: BoxFit.cover)
+                    ? Image.network(widget.coupon.images![0],
+                        fit: BoxFit.fitWidth)
                     : Image.asset(
                         widget.coupon.images![0],
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fitWidth,
                       ),
                 Container(
                   decoration: const BoxDecoration(
