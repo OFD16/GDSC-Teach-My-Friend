@@ -101,6 +101,57 @@ class AuthService {
     }
   }
 
+//  Future<bool> checkIsEmailRegistered(String email) async {
+//     try {
+//       firebase_auth.User? user = await _auth.re(email)
+//       return false;
+//     } on firebase_auth.FirebaseAuthException catch (e) {
+//       Fluttertoast.showToast(
+//         msg: e.message!,
+//         gravity: ToastGravity.TOP,
+//         backgroundColor: Colors.redAccent,
+//         textColor: Colors.white,
+//         fontSize: 16.0,
+//       );
+//       return false;
+//     }
+//   }
+
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      bool isEmailRegistered = await userService.checkIsEmailRegistered(email);
+      if (isEmailRegistered) {
+        await _auth.sendPasswordResetEmail(email: email);
+        Fluttertoast.showToast(
+          msg: 'Password reset email sent successfully',
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.greenAccent,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return true;
+      } else {
+        Fluttertoast.showToast(
+          msg: "User with this email doesn't exist please register first",
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.redAccent,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return false;
+      }
+    } on firebase_auth.FirebaseException catch (e) {
+      Fluttertoast.showToast(
+        msg: e.message!,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+  }
+
   // Sign out
   Future<void> signOut() async {
     try {

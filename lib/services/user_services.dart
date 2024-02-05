@@ -137,4 +137,14 @@ class UserService {
       );
     }
   }
+
+  Future<bool> checkIsEmailRegistered(String email) async {
+    try {
+      var res = await _usersCollection.where('email', isEqualTo: email).get();
+      return res.docs.isNotEmpty;
+    } catch (e) {
+      print('Error checking user with email: $e');
+      return false;
+    }
+  }
 }

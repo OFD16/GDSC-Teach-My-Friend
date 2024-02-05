@@ -1,3 +1,6 @@
+import 'package:Sharey/screens/sign_in/sign_in_screen.dart';
+import 'package:Sharey/screens/sign_up/sign_up_screen.dart';
+import 'package:Sharey/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/custom_surfix_icon.dart';
@@ -14,6 +17,7 @@ class ForgotPassForm extends StatefulWidget {
 
 class _ForgotPassFormState extends State<ForgotPassForm> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
   List<String> errors = [];
   String? email;
   @override
@@ -23,6 +27,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
       child: Column(
         children: [
           TextFormField(
+            controller: emailController,
             keyboardType: TextInputType.emailAddress,
             onSaved: (newValue) => email = newValue,
             onChanged: (value) {
@@ -64,9 +69,25 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
           FormError(errors: errors),
           const SizedBox(height: 8),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 // Do what you want to do
+                print("email is ${emailController.text}");
+                bool isMailSended = await AuthService()
+                    .sendPasswordResetEmail(emailController.text);
+
+                if (isMailSended) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      duration: Duration(seconds: 5),
+                      content: Text(
+                          "Password reset email sent. Please check your email and reset your password. After that, you can sign in with your new password."),
+                      backgroundColor: Colors.grey,
+                    ),
+                  );
+
+                  Navigator.pushNamed(context, SignInScreen.routeName);
+                }
               }
             },
             child: const Text("Continue"),
