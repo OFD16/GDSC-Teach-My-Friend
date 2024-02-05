@@ -84,8 +84,8 @@ class _PopularProductsState extends State<PopularProducts> {
                     padding: const EdgeInsets.only(left: 20),
                     child: ProductCard(
                       isFavourite: initLessons[index]
-                          .likes!
-                          .contains(authUserProvider.authUser!.id),
+                          .likes
+                          .contains(authUserProvider.authUser?.id ?? ""),
                       lesson: initLessons[index],
                       onFavouritePress: () {
                         setState(() {
