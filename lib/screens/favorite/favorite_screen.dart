@@ -2,6 +2,7 @@ import 'package:Sharey/components/product_card.dart';
 import 'package:Sharey/models/Product.dart';
 import 'package:Sharey/models/User.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
+import 'package:Sharey/screens/home/home_screen.dart';
 import 'package:Sharey/services/lesson_services.dart';
 import 'package:Sharey/services/user_services.dart';
 import 'package:flutter/material.dart';
@@ -85,38 +86,61 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            childAspectRatio: 0.75,
-          ),
-          itemCount: favouriteLessons.length,
-          itemBuilder: (context, index) {
-            return ProductCard(
-              lesson: favouriteLessons[index],
-              onFavouritePress: () {
-                setState(() {
-                  if (favouriteLessons[index].likes.contains(authUser.id)) {
-                    favouriteLessons[index].likes.remove(authUser.id);
-                    unlikeLesson(favouriteLessons[index]);
-                  } else {
-                    favouriteLessons[index].likes.add(authUser.id!);
-                    likeLesson(favouriteLessons[index]);
-                  }
-                });
-              },
-              onPress: () => Navigator.pushNamed(
-                context,
-                DetailsScreen.routeName,
-                arguments:
-                    ProductDetailsArguments(lesson: favouriteLessons[index]),
+        child: favouriteLessons.isNotEmpty
+            ? GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 0.75,
+                ),
+                itemCount: favouriteLessons.length,
+                itemBuilder: (context, index) {
+                  return ProductCard(
+                    lesson: favouriteLessons[index],
+                    onFavouritePress: () {
+                      setState(() {
+                        if (favouriteLessons[index]
+                            .likes
+                            .contains(authUser.id)) {
+                          favouriteLessons[index].likes.remove(authUser.id);
+                          unlikeLesson(favouriteLessons[index]);
+                        } else {
+                          favouriteLessons[index].likes.add(authUser.id!);
+                          likeLesson(favouriteLessons[index]);
+                        }
+                      });
+                    },
+                    onPress: () => Navigator.pushNamed(
+                      context,
+                      DetailsScreen.routeName,
+                      arguments: ProductDetailsArguments(
+                          lesson: favouriteLessons[index]),
+                    ),
+                    isFavourite:
+                        favouriteLessons[index].likes.contains(authUser.id),
+                  );
+                },
+              )
+            : Center(
+                child: Column(
+                  children: [
+                    const Text('No favourite lessons'),
+                    const SizedBox(height: 20),
+                    const Image(
+                      image: AssetImage('assets/images/not_found.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, HomeScreen.routeName);
+                      },
+                      child: const Text('Lets find some lessons!'),
+                    ),
+                  ],
+                ),
               ),
-              isFavourite: favouriteLessons[index].likes.contains(authUser.id),
-            );
-          },
-        ),
       ),
     );
   }

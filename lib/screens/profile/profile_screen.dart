@@ -1,4 +1,6 @@
 import 'package:Sharey/constants.dart';
+import 'package:Sharey/local_storage/auth_storage.dart';
+import 'package:Sharey/providers/auth_provider.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/profile/components/coupons_tab.dart';
 import 'package:Sharey/screens/profile/components/lessons_tab.dart';
@@ -49,12 +51,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AuthUserProvider authUserProvider =
           Provider.of<AuthUserProvider>(context, listen: false);
       if (authUserProvider.authUser != null) {
-        setState(() {
-          widget.user = authUserProvider.authUser;
-        });
+        getUser(authUserProvider.authUser!.id!);
 
         print("user in profile screen: ${widget.user!.toJson()}");
       }
+    }
+  }
+
+  void getUser(String userId) async {
+    User? user = await userService.getUser(userId);
+    AuthStorage authStorage = AuthStorage();
+    AuthUserProvider authUserProvider =
+        Provider.of<AuthUserProvider>(context, listen: false);
+    if (user != null) {
+      setState(() {
+        widget.user = user;
+        authStorage.setAuthUser(user);
+        authUserProvider.setAuthUser(user);
+      });
     }
   }
 
@@ -67,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text("Profile"),
         actions: widget.user != null &&
-                widget.user!.id == authUserProvider.authUser!.id
+                widget.user!.id == authUserProvider.authUser?.id
             ? [
                 IconButton(
                   icon: const Icon(Icons.settings),

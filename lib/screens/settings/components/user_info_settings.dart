@@ -2,6 +2,8 @@ import 'package:Sharey/local_storage/auth_storage.dart';
 import 'package:Sharey/models/User.dart';
 import 'package:Sharey/providers/auth_user_provider.dart';
 import 'package:Sharey/screens/create_content/text_input.dart';
+import 'package:Sharey/screens/sign_up/sign_up_screen.dart';
+import 'package:Sharey/services/auth_services.dart';
 import 'package:Sharey/services/user_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -153,6 +155,46 @@ class _UserInfoSettingsState extends State<UserInfoSettings> {
             onPressed: () => updateUser(),
             child: const Text("Save Changes"),
           ),
+          const SizedBox(height: 20),
+          InkWell(
+            child: const Text(
+              "I want to delete my account",
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            onTap: () {
+              showAboutDialog(context: context, children: [
+                const Text(
+                  "Are you sure you want to delete your account?",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () async {
+                    bool res = await AuthService().deleteUser();
+                    if (res) {
+                      AuthService().deleteUserAccount();
+                      authStorage.clearDatas();
+                      authUserProvider.clearAuthUser();
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        SignUpScreen.routeName,
+                        (route) => false,
+                      );
+                    }
+                  },
+                  child: const Text("Yes, I'm sure"),
+                ),
+              ]);
+            },
+          )
         ],
       ),
     );

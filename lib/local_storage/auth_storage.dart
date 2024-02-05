@@ -78,4 +78,9 @@ class AuthStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool("emailNotificationsEnabled", value);
   }
+
+  clearDatas() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
 }

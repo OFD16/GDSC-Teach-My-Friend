@@ -103,7 +103,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
     final lesson = agrs.lesson;
     print("user data: $user");
 
-    bool isJoined = lesson.students!.contains(authUserProvider.authUser!.id);
+    bool isJoined =
+        lesson.students!.contains(authUserProvider.authUser?.id ?? "");
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -170,9 +171,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
             child: Column(
               children: [
                 ProductDescription(
+                  // pressOnFavourite: () {
+                  //   if (lesson.likes.contains(user?.id)) {
+                  //     lesson.likes.remove(user?.id);
+                  //   } else {
+                  //     lesson.likes.add(user!.id!);
+                  //   }
+                  // },
                   pressOnSeeMore: () {},
                   lesson: lesson,
-                  isFavourite: lesson.likes!.contains(user!.id),
+                  isFavourite: lesson.likes.contains(user?.id),
                   user: user,
                 ),
                 TopRoundedContainer(

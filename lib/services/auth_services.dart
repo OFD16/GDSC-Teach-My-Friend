@@ -1,3 +1,5 @@
+import 'package:Sharey/models/Lesson.dart';
+import 'package:Sharey/services/lesson_services.dart';
 import 'package:Sharey/services/user_services.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 // import 'package:cloud_firestore/cloud_firestore.dart';
@@ -140,6 +142,68 @@ class AuthService {
         );
         return false;
       }
+    } on firebase_auth.FirebaseException catch (e) {
+      Fluttertoast.showToast(
+        msg: e.message!,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> deleteUser() async {
+    try {
+      List<Lesson> lessons =
+          await LessonService().getUserLessons(_auth.currentUser!.uid);
+      for (Lesson lesson in lessons) {
+        for (String userId in lesson.likes) {
+          await UserService().removeUserFavorite(userId, lesson.id!);
+        }
+        await LessonService().deleteLesson(lesson.id!);
+      }
+      List<Lesson> joinedLessons =
+          await LessonService().getUserJoinedLessons(_auth.currentUser!.uid);
+      for (Lesson lesson in joinedLessons) {
+        await LessonService().leaveLesson(lesson.id!, _auth.currentUser!.uid);
+      }
+
+      User? user = await userService.getUser(_auth.currentUser!.uid);
+
+      List<Lesson> favouriteLessons =
+          await LessonService().getFavouriteLessons(user!.favourites!);
+      for (Lesson lesson in favouriteLessons) {
+        await LessonService().unlikeLesson(lesson.id!, _auth.currentUser!.uid);
+      }
+
+      Fluttertoast.showToast(
+        msg: 'User deleted successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.greenAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return true;
+    } on firebase_auth.FirebaseException catch (e) {
+      Fluttertoast.showToast(
+        msg: e.message!,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> deleteUserAccount() async {
+    try {
+      await userService.deleteUser(_auth.currentUser!.uid);
+      await _auth.currentUser!.delete();
+
+      return true;
     } on firebase_auth.FirebaseException catch (e) {
       Fluttertoast.showToast(
         msg: e.message!,

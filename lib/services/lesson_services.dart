@@ -167,26 +167,41 @@ class LessonService {
 
   Future<List<Lesson>> getFavouriteLessons(List<String> favouriteIds) async {
     try {
-      final doc =
-          await _lessonsCollection.where('id', whereIn: favouriteIds).get();
-      if (doc.docs.isNotEmpty) {
-        return doc.docs
-            .map((doc) => Lesson.fromJson(doc.data() as Map<String, dynamic>))
-            .toList();
+      // Check if favouriteIds is not empty
+      if (favouriteIds.isNotEmpty) {
+        final doc =
+            await _lessonsCollection.where('id', whereIn: favouriteIds).get();
+
+        if (doc.docs.isNotEmpty) {
+          return doc.docs
+              .map((doc) => Lesson.fromJson(doc.data() as Map<String, dynamic>))
+              .toList();
+        } else {
+          // Handle the case where no lessons are found
+          Fluttertoast.showToast(
+            msg: 'Lesson not found',
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.redAccent,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          return [];
+        }
       } else {
-        // Fluttertoast.showToast(
-        //   msg: 'Lesson not found',
-        //   gravity: ToastGravity.TOP,
-        //   backgroundColor: Colors.redAccent,
-        //   textColor: Colors.white,
-        //   fontSize: 16.0,
-        // );
+        // Handle the case where favouriteIds is empty
+        Fluttertoast.showToast(
+          msg: 'No favourite lessons found',
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
         return [];
       }
     } catch (e) {
-      print('Error getting coupon: $e');
+      print('Error getting favourite lessons: $e');
       Fluttertoast.showToast(
-        msg: 'Error occured when trying to get lessons: $e',
+        msg: 'Error occurred when trying to get favourite lessons: $e',
         gravity: ToastGravity.TOP,
         backgroundColor: Colors.redAccent,
         textColor: Colors.white,
@@ -236,6 +251,38 @@ class LessonService {
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Error unliking lesson',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
+  Future<List<Lesson>> getUserJoinedLessons(String userId) {
+    return _lessonsCollection
+        .where('students', arrayContains: userId)
+        .get()
+        .then((value) => value.docs
+            .map((e) => Lesson.fromJson(e.data() as Map<String, dynamic>))
+            .toList());
+  }
+
+  Future<void> leaveLesson(String lessonId, String userId) async {
+    try {
+      await _lessonsCollection.doc(lessonId).update({
+        'students': FieldValue.arrayRemove([userId])
+      });
+      Fluttertoast.showToast(
+        msg: 'Left lesson successfully',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error leaving lesson',
         gravity: ToastGravity.TOP,
         backgroundColor: Colors.redAccent,
         textColor: Colors.white,

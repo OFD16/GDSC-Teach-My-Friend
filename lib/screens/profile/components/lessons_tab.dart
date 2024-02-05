@@ -74,7 +74,7 @@ class _LessonTabState extends State<LessonTab> {
     if (lessons.isEmpty) {
       return EmptyStatus(
         tabName: "Lessons",
-        isAuthUser: widget.user!.id == authUserProvider.authUser!.id,
+        isAuthUser: widget.user!.id == authUserProvider.authUser?.id,
       );
     }
 
@@ -118,7 +118,7 @@ class _LessonTabState extends State<LessonTab> {
                     ),
                   ),
                 ),
-                lesson.ownerId == authUserProvider.authUser!.id
+                lesson.ownerId == authUserProvider.authUser?.id
                     ? Flexible(
                         child: Row(
                           children: [

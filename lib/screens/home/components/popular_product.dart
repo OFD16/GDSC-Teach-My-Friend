@@ -91,10 +91,10 @@ class _PopularProductsState extends State<PopularProducts> {
                         setState(() {
                           if (initLessons[index]
                               .likes
-                              .contains(authUserProvider.authUser!.id)) {
+                              .contains(authUserProvider.authUser?.id)) {
                             initLessons[index]
                                 .likes
-                                .remove(authUserProvider.authUser!.id);
+                                .remove(authUserProvider.authUser?.id);
                             unlikeLesson(initLessons[index]);
                           } else {
                             initLessons[index]
