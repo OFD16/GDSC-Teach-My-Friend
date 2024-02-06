@@ -37,7 +37,8 @@ class SettingsScreen extends StatelessWidget {
                 Icons.remove,
                 color: Colors.grey[600],
               ),
-              Expanded(
+              Container(
+                height: 900,
                 child: content,
               ),
             ],
